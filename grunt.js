@@ -30,7 +30,7 @@ module.exports = function(grunt) {
             app: {
                 src: ['src/**/*.coffee'],
                 options: {
-                    bare: true,
+                    bare: false,
                     preserve_dirs: true
                 }
             }
