@@ -26,6 +26,23 @@ module.exports = function(grunt) {
         qunit: {
             files: ['test/**/*.html']
         },
+        coffee: {
+            app: {
+                src: ['src/**/*.coffee', 'text/**/*.coffee'],
+                dest: 'src/',
+                options: {
+                    bare: true,
+                    preserve_dirs: true
+                }
+            },
+            test: {
+                src: ['test/**/*.coffee'],
+                dest: 'test/',
+                options: {
+                    bare: true
+                }
+            }
+        },
         lint: {
             files: ['grunt.js', 'src/**/*.js', 'test/**/*.js']
         },
