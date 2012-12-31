@@ -123,7 +123,7 @@ methods =
 
   destroy: ->
     $(window).unbind 'resize.lockit'
-
+    @item.destroy() for item in @items
 
 # Collection method.
 $.fn.lockit = (method) ->

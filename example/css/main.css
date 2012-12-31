@@ -1,0 +1,42 @@
+html,
+button,
+input,
+select,
+textarea {
+  color: #222;
+}
+
+body {
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+body > ul {
+  border-bottom: 1px solid #ccc;
+  list-style: none;
+  margin: 0px; 
+  padding: 80px 40px;
+  text-align: center
+}
+
+body > ul > ul {
+  display: inline-block;
+  vertical-align: top;
+  list-style: none;
+  padding: 0px;
+  margin: 0px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+body > ul > ul > li {
+  margin: 20px;
+  overflow: hidden;
+  display: block;
+}
+
+body > ul > ul > li > img {
+  margin: 0px;
+  padding: 0px;
+  display: block;
+}

@@ -198,7 +198,15 @@
       return this;
     },
     destroy: function() {
-      return $(window).unbind('resize.lockit');
+      var item, _i, _len, _ref, _results;
+      $(window).unbind('resize.lockit');
+      _ref = this.items;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        _results.push(this.item.destroy());
+      }
+      return _results;
     }
   };
 

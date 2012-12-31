@@ -27,16 +27,24 @@ module.exports = function(grunt) {
             files: ['test/**/*.html']
         },
         coffee: {
-            app: {
+            dist: {
                 src: ['src/**/*.coffee'],
                 options: {
                     bare: false,
                     preserve_dirs: true
                 }
+            },
+            example: {
+                src: ['example/js/**/*.coffee'],
+                options: {
+                    bare: false,
+                    preserve_dirs: true
+                }
             }
+
         },
         lint: {
-            files: ['grunt.js', 'src/**/*.js', 'test/**/*.js']
+            files: ['grunt.js', 'src/**/*.js', 'test/**/*.js', 'example/**/*.js']
         },
         watch: {
             files: '<config:lint.files>',
@@ -66,7 +74,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-coffee');
 
     // Default task.
-    grunt.registerTask('default', 'qunit concat min');
+    grunt.registerTask('default', 'coffee qunit concat min');
 
     // Travis CI task.
     grunt.registerTask('travis', 'qunit');
