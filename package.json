@@ -1,13 +1,20 @@
 {
-  "name": "jquery-plugin",
-  "version": "0.0.0-ignored",
-  "engines": {
-    "node": ">= 0.6.0"
-  },
-  "scripts": {
-    "test": "grunt qunit"
-  },
-  "devDependencies": {
-    "grunt": "~0.3.17"
-  }
+    "name": "lockit",
+    "version": "0.0.0-ignored",
+    "main": "dist/lockit",
+    "engines": {
+        "node": ">= 0.6.0"
+    },
+    "scripts": {
+        "test": "grunt qunit"
+    },
+    "scripts": {
+        "test": "grunt travis --verbose"
+    },
+    "dependencies": {
+        "jQuery": "~1.8.3"
+    },
+    "devDependencies": {
+        "grunt": "~0.3.17"
+    }
 }
