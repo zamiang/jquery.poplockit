@@ -1,3 +1,5 @@
+[![build status](https://api.travis-ci.org/zamiang/lockit-js.png)](http://travis-ci.org/zamiang/lockit-js)
+
 # Lockit
 
 The best jQuery plugin ever.
