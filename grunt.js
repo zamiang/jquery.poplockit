@@ -28,18 +28,10 @@ module.exports = function(grunt) {
         },
         coffee: {
             app: {
-                src: ['src/**/*.coffee', 'text/**/*.coffee'],
-                dest: 'src/',
+                src: ['src/**/*.coffee'],
                 options: {
                     bare: true,
                     preserve_dirs: true
-                }
-            },
-            test: {
-                src: ['test/**/*.coffee'],
-                dest: 'test/',
-                options: {
-                    bare: true
                 }
             }
         },
@@ -48,7 +40,7 @@ module.exports = function(grunt) {
         },
         watch: {
             files: '<config:lint.files>',
-            tasks: 'lint qunit'
+            tasks: 'qunit'
         },
         jshint: {
             options: {
@@ -71,10 +63,11 @@ module.exports = function(grunt) {
         uglify: {}
     });
 
-    // Default task.
-    grunt.registerTask('default', 'lint qunit concat min');
     grunt.loadNpmTasks('grunt-coffee');
 
+    // Default task.
+    grunt.registerTask('default', 'qunit concat min');
+
     // Travis CI task.
-    grunt.registerTask('travis', 'lint qunit');
+    grunt.registerTask('travis', 'qunit');
 };
