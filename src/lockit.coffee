@@ -1,4 +1,4 @@
-# lockit
+# lockito
 # https://github.com/zamiang/lockit-js
 #
 # Copyright (c) 2012 Brennan Moore
@@ -8,39 +8,63 @@ $ = jQuery
   
 class Column
 
+  requires: ['height', 'margin', 'defaultTop', 'defaultbottom']
+
   constructor: ($el, settings) ->
+    for require in @requires
+      throw "You must pass #{require}" unless settings[require]?
     @$el = $el
     @settings = settings
+    @setDimensions()
 
-    @originalWidth = @width = @$el.outerWidth(false)
-    @originalHeight = @height = @$el.height()
+  setDimensions: (height) ->
+    @settings.height = height if height
+    @top = @$el.offset().top
+    @bottom = top + @settings.height - @$el.outerHeight(true) - (@settings.margin * 2)
 
   setPosition: (pos = 'absolute', direction = 'north') ->
-    css =
+    @$el.css {
       position : pos
-      top      : if direction == 'north' then @defaultTop else 'auto'
-      bottom   : if direction == 'south' then @defaultBottom else 'auto'
-
-    @$el.css css
+      top      : if direction == 'north' then @settings.defaultTop else 'auto'
+      bottom   : if direction == 'south' then @settings.defaultBottom else 'auto'
+    }
 
   onScroll: (scrollTop, viewportHeight) ->
-    return if viewportHeight >= @model.get('height')
-    return @setPosition('fixed') if scrollTop >= @model.get('top') and scrollTop < @model.get('bottom')
-    return @setPosition('absolute', 'north') if scrollTop < @model.get('top')
-    return @setPosition('absolute', 'south') if scrollTop >= @model.get('bottom')
+    return if viewportHeight >= @height
+    return @setPosition('fixed') if scrollTop >= @top and scrollTop < @bottom
+    return @setPosition('absolute', 'north') if scrollTop < @top
+    return @setPosition('absolute', 'south') if scrollTop >= @bottom
 
 
 class Ul
 
-  active: true
-  rendered: false
+  defaults: 
+    defaultTop: '90px'
+    defaultBottom: '90px'
+    margin: 90
+    active: true
+    rendered: false
+
+  requires: []
+
+  constructor: (settings) ->
+    for require in @requires
+      throw "You must pass #{require}" unless settings[require]?
+
+    @detectiOS()
+    @initRequestAnimationFrame()
+
+    @settings = $.extend @defaults, settings
+    items = @$el?.find('> li')
+    if items
+      @items = items.map -> new Li($(this), @settings)
 
   onScroll: =>
     return unless @active
     scrollTop = @$win.scrollTop()
 
     if scrollTop == @previousScrollTop
-      return window.requestAnimationFrame @onScroll
+      return @requestAnimationFrame @onScroll
 
     @scrollingDown = @previousScrollTop < scrollTop
     for item in @items
@@ -48,34 +72,35 @@ class Ul
 
     @previousScrollTop = scrollTop
 
-    window.requestAnimationFrame @onScroll
+    @requestAnimationFrame @onScroll
 
   recomputeEachLiHeight: -> item.setWayPointThrottled() for item in @items
   repositionEachLi: -> item.onScroll(@previousScrollTop, @$win.height()) for item in @items
 
-  onResize: =>
+  onResize: ->
     @setMaxWidth()
     for item in @items
       item.onResize()
       item.onScroll @previousScrollTop, @$win.height()
     @height = @$win.outerHeight(true)
 
-  # creates a div w/ a max-width that correspods to the max-width of
-  # artwork images and posts
-  # allows us to keep image and post sizes responsive while knowing max width in JS
-  setMaxWidth: ->
-    @$el.append("<div class='max_width'></div>") unless @$('.max_width').length > 0
-    @maxWidth = Number(@$el.find('.max_width').css('max-width').replace('px',''))
-
   bindWindowEvents: ->
     @requestAnimationFrame @onScroll
-    unless App.IS_IOS
+    unless @IS_IOS
       @$win.bind 'resize.feedItem', @debounce(@onResize, 100)
 
   unbindWindowEvents: -> @$win.unbind('.feedItem')
 
+  destroy: ->
+    @settings.rendered = false
+    @setttings.active = false
+    @item.destroy() for item in @items
+
+
+
+  ##
+  ## Helpers 
   # from underscore.js
-  # ----------------------------------
   debounce: (func, wait) ->
     timeout = 0
     return ->
@@ -86,6 +111,13 @@ class Ul
 
       clearTimeout timeout
       timeout = setTimeout(throttler, wait)
+
+  # iOS has a unique set of scroll issues
+  # - does not update scrollTop until touchEnd event is fired (does not update while scrolling -- only when done)
+  # - resize event fires when document height or width change (such as when items are added to the dom)
+  detectiOS: ->
+    uagent = navigator.userAgent.toLowerCase()
+    @IS_IOS = uagent.match(/(iPhone|iPod|iPad)/i)?
 
   # http://paulirish.com/2011/requestanimationframe-for-smart-animating/
   # requestAnimationFrame polyfill by Erik Moller
@@ -118,14 +150,14 @@ class Ul
 methods =
 
   initialize: (settings) ->
-    @settings = settings
+    throw "You must pass settings" unless settings?
+    @ul = new Ul(settings)
     @
 
   destroy: ->
     $(window).unbind 'resize.lockit'
-    @item.destroy() for item in @items
+    @ul.destroy()
 
-# Collection method.
 $.fn.lockit = (method) ->
   if methods[method]?
     methods[method].apply @, Array::slice.call(arguments, 1)
@@ -133,4 +165,3 @@ $.fn.lockit = (method) ->
     methods.initialize.apply @, arguments
   else
     $.error "Method #{method} does not exist on jQuery.lockit"
-

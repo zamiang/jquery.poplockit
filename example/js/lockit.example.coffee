@@ -1,3 +1,13 @@
+#
+# Lockit.js example code
+#
+# Generates html to demonstrate what lockit.js does
+# creates 'feedItems' that consist of columns of placekittens
+# each of these columns will 'pop' and 'lock' in place as the user scrolls
+#
+# @requires jQuery
+# @requires lockit.js
+
 App = 
   defaults:
     numberItems: 2
@@ -5,24 +15,22 @@ App =
     kittenHeight: 400
     columnPadding: 20
 
-  # generate a whole bunch of html and then initialize lockitjs
   initialize: ->
     @columnWidth = @getColumnWidth()
     $('body')
       .html(@generateFeedHtml())
       .find('> ul').lockit()
 
-  getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns) - 80
+  getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns) - 20
 
   generateFeedHtml: ->
     [1..@defaults.numberItems].map =>
       "<ul>" + [1..@defaults.numberColumns].map =>
-        numberKittens = Math.ceil(Math.random() * 10)
-        @generateKittens numberKittens
+        @generateKittensHtml Math.ceil(Math.random() * 10)
       .join('') + "</ul>"
     .join('')
 
-  generateKittens: (num) ->
+  generateKittensHtml: (num) ->
     "<ul style='width: #{@columnWidth}px'>" + [1..num].map =>
       height = Math.ceil(50 + (Math.random() * 600))
       width = @columnWidth - @defaults.columnPadding

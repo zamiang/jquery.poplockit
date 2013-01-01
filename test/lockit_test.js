@@ -3,55 +3,41 @@
 /*global notDeepEqual:false, strictEqual:false, notStrictEqual:false, raises:false*/
 (function($) {
 
-  /*
-    ======== A Handy Little QUnit Reference ========
-    http://docs.jquery.com/QUnit
+    /*
+     ======== A Handy Little QUnit Reference ========
+     http://docs.jquery.com/QUnit
 
-    Test methods:
-      expect(numAssertions)
-      stop(increment)
-      start(decrement)
-    Test assertions:
-      ok(value, [message])
-      equal(actual, expected, [message])
-      notEqual(actual, expected, [message])
-      deepEqual(actual, expected, [message])
-      notDeepEqual(actual, expected, [message])
-      strictEqual(actual, expected, [message])
-      notStrictEqual(actual, expected, [message])
-      raises(block, [expected], [message])
-  */
+     Test methods:
+     expect(numAssertions)
+     stop(increment)
+     start(decrement)
+     Test assertions:
+     ok(value, [message])
+     equal(actual, expected, [message])
+     notEqual(actual, expected, [message])
+     deepEqual(actual, expected, [message])
+     notDeepEqual(actual, expected, [message])
+     strictEqual(actual, expected, [message])
+     notStrictEqual(actual, expected, [message])
+     raises(block, [expected], [message])
+     */
 
-  module('jQuery#awesome', {
-    setup: function() {
-      this.elems = $('#qunit-fixture').children();
-    }
-  });
+    module('jQuery#lockit', {
+        setup: function() {
+            this.elems = $('#qunit-fixture').children();
+        }
+    });
 
-  test('is chainable', 1, function() {
-    // Not a bad test to run on collection methods.
-    strictEqual(this.elems.lockit(), this.elems, 'should be chaninable');
-  });
+    test('is chainable', function() {
+        strictEqual(this.elems.lockit('initialize', {}), this.elems, 'should be chaninable');
+    });
 
-  // test('is awesome', 1, function() {
-  //   strictEqual(this.elems.awesome().text(), 'awesomeawesomeawesome', 'should be thoroughly awesome');
-  // });
+    test('requires settings', function() {
+        raises(function() { this.elems.lockit(); }, Error, "must throw error to pass");
+    });
 
-  // module('jQuery.awesome');
-
-  // test('is awesome', 1, function() {
-  //   strictEqual($.awesome(), 'awesome', 'should be thoroughly awesome');
-  // });
-
-  // module(':awesome selector', {
-  //   setup: function() {
-  //     this.elems = $('#qunit-fixture').children();
-  //   }
-  // });
-
-  // test('is awesome', 1, function() {
-  //   // Use deepEqual & .get() when comparing jQuery objects.
-  //   deepEqual(this.elems.filter(':awesome').get(), this.elems.last().get(), 'knows awesome when it sees it');
-  // });
+    test('raises error on invalid method', function() {
+        raises(function() { this.elems.lockit('invalid'); }, Error, "must throw error to pass");
+    });
 
 }(jQuery));

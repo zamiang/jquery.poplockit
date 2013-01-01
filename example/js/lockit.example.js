@@ -13,7 +13,7 @@
       return $('body').html(this.generateFeedHtml()).find('> ul').lockit();
     },
     getColumnWidth: function() {
-      return Math.floor($('body').width() / this.defaults.numberColumns) - 80;
+      return Math.floor($('body').width() / this.defaults.numberColumns) - 20;
     },
     generateFeedHtml: function() {
       var _i, _ref, _results,
@@ -29,13 +29,11 @@
           for (var _i = 1, _ref = _this.defaults.numberColumns; 1 <= _ref ? _i <= _ref : _i >= _ref; 1 <= _ref ? _i++ : _i--){ _results.push(_i); }
           return _results;
         }).apply(this).map(function() {
-          var numberKittens;
-          numberKittens = Math.ceil(Math.random() * 10);
-          return _this.generateKittens(numberKittens);
+          return _this.generateKittensHtml(Math.ceil(Math.random() * 10));
         }).join('') + "</ul>";
       }).join('');
     },
-    generateKittens: function(num) {
+    generateKittensHtml: function(num) {
       var _i, _results,
         _this = this;
       return ("<ul style='width: " + this.columnWidth + "px'>") + (function() {

@@ -1,15 +1,10 @@
-html,
-button,
-input,
-select,
-textarea {
-  color: #222;
-}
-
-body {
-  font-size: 1em;
-  line-height: 1.4;
-}
+/*
+ * CSS for lockit.js example
+ *
+ * designed considerations:
+ * - minimize markup
+ * - minimize required css for configuring lockit.js
+*/
 
 body > ul {
   border-bottom: 1px solid #ccc;

@@ -10,40 +10,55 @@
 
   Column = (function() {
 
+    Column.prototype.requires = ['height', 'margin', 'defaultTop', 'defaultbottom'];
+
     function Column($el, settings) {
+      var require, _i, _len, _ref;
+      _ref = this.requires;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        require = _ref[_i];
+        if (settings[require] == null) {
+          throw "You must pass " + require;
+        }
+      }
       this.$el = $el;
       this.settings = settings;
-      this.originalWidth = this.width = this.$el.outerWidth(false);
-      this.originalHeight = this.height = this.$el.height();
+      this.setDimensions();
     }
 
+    Column.prototype.setDimensions = function(height) {
+      if (height) {
+        this.settings.height = height;
+      }
+      this.top = this.$el.offset().top;
+      return this.bottom = top + this.settings.height - this.$el.outerHeight(true) - (this.settings.margin * 2);
+    };
+
     Column.prototype.setPosition = function(pos, direction) {
-      var css;
       if (pos == null) {
         pos = 'absolute';
       }
       if (direction == null) {
         direction = 'north';
       }
-      css = {
+      return this.$el.css({
         position: pos,
-        top: direction === 'north' ? this.defaultTop : 'auto',
-        bottom: direction === 'south' ? this.defaultBottom : 'auto'
-      };
-      return this.$el.css(css);
+        top: direction === 'north' ? this.settings.defaultTop : 'auto',
+        bottom: direction === 'south' ? this.settings.defaultBottom : 'auto'
+      });
     };
 
     Column.prototype.onScroll = function(scrollTop, viewportHeight) {
-      if (viewportHeight >= this.model.get('height')) {
+      if (viewportHeight >= this.height) {
         return;
       }
-      if (scrollTop >= this.model.get('top') && scrollTop < this.model.get('bottom')) {
+      if (scrollTop >= this.top && scrollTop < this.bottom) {
         return this.setPosition('fixed');
       }
-      if (scrollTop < this.model.get('top')) {
+      if (scrollTop < this.top) {
         return this.setPosition('absolute', 'north');
       }
-      if (scrollTop >= this.model.get('bottom')) {
+      if (scrollTop >= this.bottom) {
         return this.setPosition('absolute', 'south');
       }
     };
@@ -54,16 +69,37 @@
 
   Ul = (function() {
 
-    function Ul() {
-      this.onResize = __bind(this.onResize, this);
+    Ul.prototype.defaults = {
+      defaultTop: '90px',
+      defaultBottom: '90px',
+      margin: 90,
+      active: true,
+      rendered: false
+    };
 
+    Ul.prototype.requires = [];
+
+    function Ul(settings) {
       this.onScroll = __bind(this.onScroll, this);
 
+      var items, require, _i, _len, _ref, _ref1;
+      _ref = this.requires;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        require = _ref[_i];
+        if (settings[require] == null) {
+          throw "You must pass " + require;
+        }
+      }
+      this.detectiOS();
+      this.initRequestAnimationFrame();
+      this.settings = $.extend(this.defaults, settings);
+      items = (_ref1 = this.$el) != null ? _ref1.find('> li') : void 0;
+      if (items) {
+        this.items = items.map(function() {
+          return new Li($(this), this.settings);
+        });
+      }
     }
-
-    Ul.prototype.active = true;
-
-    Ul.prototype.rendered = false;
 
     Ul.prototype.onScroll = function() {
       var item, scrollTop, _i, _len, _ref;
@@ -72,7 +108,7 @@
       }
       scrollTop = this.$win.scrollTop();
       if (scrollTop === this.previousScrollTop) {
-        return window.requestAnimationFrame(this.onScroll);
+        return this.requestAnimationFrame(this.onScroll);
       }
       this.scrollingDown = this.previousScrollTop < scrollTop;
       _ref = this.items;
@@ -81,7 +117,7 @@
         item.onScroll(scrollTop, this.height);
       }
       this.previousScrollTop = scrollTop;
-      return window.requestAnimationFrame(this.onScroll);
+      return this.requestAnimationFrame(this.onScroll);
     };
 
     Ul.prototype.recomputeEachLiHeight = function() {
@@ -118,22 +154,28 @@
       return this.height = this.$win.outerHeight(true);
     };
 
-    Ul.prototype.setMaxWidth = function() {
-      if (!(this.$('.max_width').length > 0)) {
-        this.$el.append("<div class='max_width'></div>");
-      }
-      return this.maxWidth = Number(this.$el.find('.max_width').css('max-width').replace('px', ''));
-    };
-
     Ul.prototype.bindWindowEvents = function() {
       this.requestAnimationFrame(this.onScroll);
-      if (!App.IS_IOS) {
+      if (!this.IS_IOS) {
         return this.$win.bind('resize.feedItem', this.debounce(this.onResize, 100));
       }
     };
 
     Ul.prototype.unbindWindowEvents = function() {
       return this.$win.unbind('.feedItem');
+    };
+
+    Ul.prototype.destroy = function() {
+      var item, _i, _len, _ref, _results;
+      this.settings.rendered = false;
+      this.setttings.active = false;
+      _ref = this.items;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        _results.push(this.item.destroy());
+      }
+      return _results;
     };
 
     Ul.prototype.debounce = function(func, wait) {
@@ -150,6 +192,12 @@
         clearTimeout(timeout);
         return timeout = setTimeout(throttler, wait);
       };
+    };
+
+    Ul.prototype.detectiOS = function() {
+      var uagent;
+      uagent = navigator.userAgent.toLowerCase();
+      return this.IS_IOS = uagent.match(/(iPhone|iPod|iPad)/i) != null;
     };
 
     Ul.prototype.initRequestAnimationFrame = function() {
@@ -194,19 +242,15 @@
 
   methods = {
     initialize: function(settings) {
-      this.settings = settings;
+      if (settings == null) {
+        throw "You must pass settings";
+      }
+      this.ul = new Ul(settings);
       return this;
     },
     destroy: function() {
-      var item, _i, _len, _ref, _results;
       $(window).unbind('resize.lockit');
-      _ref = this.items;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        _results.push(this.item.destroy());
-      }
-      return _results;
+      return this.ul.destroy();
     }
   };
 
