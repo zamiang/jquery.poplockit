@@ -8,38 +8,51 @@ A jQuery plugin that does...
 
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/lockit-js/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
-## Getting Started
+## Usage
+
 Download the [production version](https://raw.github.com/zamiang/lockit-js/master/dist/lockit.min.js) or the [development version](https://raw.github.com/zamiang/lockit-js/master/dist/lockit.js).
 
-In your web page:
-
+Include required Javascripts
 ```html
 <script src="jquery.js"></script>
 <script src="dist/lockit.min.js"></script>
-<script>
-jQuery(function($) {
-  $('#feed').popLockIt({
-    feedItems      : $('#feed > article'),
-    columnSelector : '> .column',
-    margin         : 90
-  });
+```
+
+Create html like this:
+```html
+  <div id="feed">
+    <article>
+      <div class="column">Left</div>
+      <div class="column">Center</div>
+      <div class="column">Right</div>
+    </article>
+    ...
+  </div>
+```
+
+Apply the popLockIt plugin
+
+```javascript
+$('#feed').popLockIt({
+  feedItems      : $('#feed > article'),
+  columnSelector : '> .column',
+  margin         : 90
 });
-</script>
 ```
 
 ## Options
 
-### feedItems
+### feedItems { jQuery Object }
 
 jQuery object for you feed items.
 
-### columnSelector
+### columnSelector { selector String }
 
-selector string to get the columns for your feed items.
+Selector string to get the columns for your feed items relative to a feed item element. It is used in jQuery.popLockIt like so: ```javascript $feedItem.find(columnSelector);```
 
-### margin
+### margin { number }
 
-*todo*
+*todo* - investigate figuring this out from the html
 
 ## Methods
 
@@ -47,15 +60,15 @@ selector string to get the columns for your feed items.
 
 returns feedItems and their Columns to their default positions and unbinds all events.
 
-### recompute
+### recompute()
 
 Recomputes height / top / bottom etc of each feed item and its columns. Run if the size of any of your feed items has changed
 
-### onScroll
+### onScroll()p
 
 Manually run the onScroll event. Recommend running this if you have hidden the feed and are now re-showing it.
 
-### addFeedItems($feedItems)
+### addFeedItems( { jQuery Object } )
 
 Add items to the feed. Takes a jQuery object containing the new feed items.
 
