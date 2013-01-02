@@ -9,7 +9,7 @@ A jQuery plugin that does...
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/lockit-js/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
 ## Getting Started
-Download the [production version][https://raw.github.com/zamiang/lockit-js/master/dist/lockit.min.js] or the [development version][https://raw.github.com/zamiang/lockit-js/master/dist/lockit.js].
+Download the [production version](https://raw.github.com/zamiang/lockit-js/master/dist/lockit.min.js) or the [development version](https://raw.github.com/zamiang/lockit-js/master/dist/lockit.js).
 
 In your web page:
 
