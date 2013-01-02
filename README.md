@@ -27,15 +27,14 @@ See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/loc
 
 ## Contributing
 
-### Notes
 Please don't edit files in the `dist` subdirectory as they are generated via grunt. You'll find source code in the `src` subdirectory!
 
 ### Modifying the code
 1. Fork and clone the repo.
-1. If needed: `npm install -g grunt`
-1. If needed: [install PhantomJS](http://phantomjs.org/download.html)
-1. Run `npm install` to install all dependencies (including grunt).
-1. Run `grunt` to grunt this project.
+1. If needed: `npm install -g grunt` for [Grunt](https://github.com/gruntjs/grunt)
+1. If needed: `brew install phantomjs` for [PhantomJS](http://phantomjs.org/download.html)
+1. Run `npm install` to install dependencies
+1. Run `grunt` (compiles coffeescripts and runs tests)
 1. Run `grunt watch` while editing files to auto-compile coffeescripts and run tests
 
 Assuming that you don't see any red, you're ready to go. Just be sure to run `grunt` after making any changes, to ensure that nothing is broken.
