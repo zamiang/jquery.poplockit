@@ -10,7 +10,7 @@
 
 App = 
   defaults:
-    numberItems: 10
+    numberItems: 20
     numberColumns: 6
     kittenHeight: 400
     columnPadding: 20
