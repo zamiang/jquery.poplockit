@@ -10,8 +10,8 @@
 
 App = 
   defaults:
-    numberItems: 2
-    numberColumns: 4
+    numberItems: 10
+    numberColumns: 6
     kittenHeight: 400
     columnPadding: 20
 
@@ -22,19 +22,22 @@ App =
       .find('> ul').lockit
         feedItems      : $('body > ul')
         columnSelector : '> ul'
+        defaultTop     : '90px'
+        defaultBottom  : '90px'
+        margin         : 90
 
   getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns / 10) * 10 - 40
 
   generateFeedHtml: ->
     [1..@defaults.numberItems].map =>
       "<ul>" + [1..@defaults.numberColumns].map =>
-        @generateKittensHtml Math.ceil(Math.random() * 10)
+        @generateKittensHtml 2
       .join('') + "</ul>"
     .join('')
 
   generateKittensHtml: (num) ->
     "<ul style='width: #{@columnWidth}px'>" + [1..num].map =>
-      height = Math.ceil(50 + (Math.random() * 600))
+      height = Math.ceil((50 + (Math.random() * 600))/ 10) * 10
       width = @columnWidth - @defaults.columnPadding
       "<li style='width: #{width}px'><img height='#{height}' width='#{width}' src='http://placekitten.com/#{width}/#{height}'></li>"
     .join('') + "</ul>"

@@ -39,17 +39,16 @@ class Column extends Base
 
   setDimensions: (height) ->
     @height = height if height
-    @top = @$el.offset().top
+    @top = @$el.offset().top - @settings.margin
     @left = @$el.offset().left
-    @bottom = top + @height - @$el.outerHeight(true) - (@settings.margin * 2)
+    @bottom = @top + @height - @$el.outerHeight(true)
 
   setPosition: (pos = 'absolute', direction = 'north') ->
-    @$el.css {
+    @$el.css
       position : pos
       top      : if direction == 'north' then @settings.defaultTop else 'auto'
       bottom   : if direction == 'south' then @settings.defaultBottom else 'auto'
       left     : @left
-    }
 
   onScroll: (scrollTop, viewportHeight) ->
     return if viewportHeight >= @height
@@ -83,7 +82,7 @@ class FeedItem extends Base
 
   setDimensions: ->
     @height = @$el.outerHeight(true)
-    @top = @$el.offset().top
+    @top = @$el.offset().top - @settings.margin
     @bottom = @top + @height
     @$el.css
       height: "#{@height}px"
@@ -92,7 +91,11 @@ class FeedItem extends Base
   onScroll: (scrollTop, viewportHeight) ->
     # only trigger onscroll for columns if we are in the feeditem
     if scrollTop >= @top and scrollTop < @bottom
+      @active = true
       column.onScroll(scrollTop, viewportHeight) for column in @columns
+    else if @active
+      column.onScroll(scrollTop, viewportHeight) for column in @columns
+      @active = false
 
   destroy: ->
     column.destroy() for column in @columns
@@ -101,9 +104,6 @@ class FeedItem extends Base
 class Container extends Base
 
   defaults: 
-    defaultTop: '90px'
-    defaultBottom: '90px'
-    margin: 90
     active: true
     rendered: false
 
@@ -139,7 +139,7 @@ class Container extends Base
 
     window.requestAnimationFrame (=> @onScroll())
 
-  onResize: ->
+  onResize: =>
     for item in @feedItems
       item.onScroll @previousScrollTop, @$window.height()
     @height = @$window.outerHeight(true)

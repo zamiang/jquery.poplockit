@@ -3,8 +3,8 @@
 
   App = {
     defaults: {
-      numberItems: 2,
-      numberColumns: 4,
+      numberItems: 10,
+      numberColumns: 6,
       kittenHeight: 400,
       columnPadding: 20
     },
@@ -12,7 +12,10 @@
       this.columnWidth = this.getColumnWidth();
       return $('body').html(this.generateFeedHtml()).find('> ul').lockit({
         feedItems: $('body > ul'),
-        columnSelector: '> ul'
+        columnSelector: '> ul',
+        defaultTop: '90px',
+        defaultBottom: '90px',
+        margin: 90
       });
     },
     getColumnWidth: function() {
@@ -32,7 +35,7 @@
           for (var _i = 1, _ref = _this.defaults.numberColumns; 1 <= _ref ? _i <= _ref : _i >= _ref; 1 <= _ref ? _i++ : _i--){ _results.push(_i); }
           return _results;
         }).apply(this).map(function() {
-          return _this.generateKittensHtml(Math.ceil(Math.random() * 10));
+          return _this.generateKittensHtml(2);
         }).join('') + "</ul>";
       }).join('');
     },
@@ -45,7 +48,7 @@
         return _results;
       }).apply(this).map(function() {
         var height, width;
-        height = Math.ceil(50 + (Math.random() * 600));
+        height = Math.ceil((50 + (Math.random() * 600)) / 10) * 10;
         width = _this.columnWidth - _this.defaults.columnPadding;
         return "<li style='width: " + width + "px'><img height='" + height + "' width='" + width + "' src='http://placekitten.com/" + width + "/" + height + "'></li>";
       }).join('') + "</ul>";

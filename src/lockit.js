@@ -1,7 +1,8 @@
 (function() {
   var $, Base, Column, Container, FeedItem, methods,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   $ = jQuery;
 
@@ -44,9 +45,9 @@
       if (height) {
         this.height = height;
       }
-      this.top = this.$el.offset().top;
+      this.top = this.$el.offset().top - this.settings.margin;
       this.left = this.$el.offset().left;
-      return this.bottom = top + this.height - this.$el.outerHeight(true) - (this.settings.margin * 2);
+      return this.bottom = this.top + this.height - this.$el.outerHeight(true);
     };
 
     Column.prototype.setPosition = function(pos, direction) {
@@ -115,7 +116,7 @@
 
     FeedItem.prototype.setDimensions = function() {
       this.height = this.$el.outerHeight(true);
-      this.top = this.$el.offset().top;
+      this.top = this.$el.offset().top - this.settings.margin;
       this.bottom = this.top + this.height;
       return this.$el.css({
         height: "" + this.height + "px",
@@ -124,8 +125,9 @@
     };
 
     FeedItem.prototype.onScroll = function(scrollTop, viewportHeight) {
-      var column, _i, _len, _ref, _results;
+      var column, _i, _j, _len, _len1, _ref, _ref1, _results;
       if (scrollTop >= this.top && scrollTop < this.bottom) {
+        this.active = true;
         _ref = this.columns;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -133,6 +135,13 @@
           _results.push(column.onScroll(scrollTop, viewportHeight));
         }
         return _results;
+      } else if (this.active) {
+        _ref1 = this.columns;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          column = _ref1[_j];
+          column.onScroll(scrollTop, viewportHeight);
+        }
+        return this.active = false;
       }
     };
 
@@ -156,9 +165,6 @@
     __extends(Container, _super);
 
     Container.prototype.defaults = {
-      defaultTop: '90px',
-      defaultBottom: '90px',
-      margin: 90,
       active: true,
       rendered: false
     };
@@ -166,6 +172,7 @@
     Container.prototype.requires = ['feedItems'];
 
     function Container($el, settings) {
+      this.onResize = __bind(this.onResize, this);
       Container.__super__.constructor.call(this, $el, settings);
       if (!($el.length > 0)) {
         throw "Lockit must be called on an element";
