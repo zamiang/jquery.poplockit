@@ -3,30 +3,52 @@
 #
 # Copyright (c) 2012 Brennan Moore
 # Licensed under the MIT license.
+#
+# DOM STRUCTURE:
+# Container
+# -- FeedItem
+# ---- Column
+# ---- Column
+# ---- Column
+# -- FeedItem
+# ---- Column
+# ...
 
 $ = jQuery
   
-class Column
+class Base
 
-  requires: ['height', 'margin', 'defaultTop', 'defaultbottom']
+  requires: []
 
   constructor: ($el, settings) ->
     for require in @requires
       throw "You must pass #{require}" unless settings[require]?
+
+
+class Column extends Base
+
+  requires: ['height', 'margin', 'defaultTop', 'defaultBottom']
+
+  constructor: ($el, settings) ->
+    super($el, settings)
     @$el = $el
     @settings = settings
+    @height = settings.height
     @setDimensions()
+    @
 
   setDimensions: (height) ->
-    @settings.height = height if height
+    @height = height if height
     @top = @$el.offset().top
-    @bottom = top + @settings.height - @$el.outerHeight(true) - (@settings.margin * 2)
+    @left = @$el.offset().left
+    @bottom = top + @height - @$el.outerHeight(true) - (@settings.margin * 2)
 
   setPosition: (pos = 'absolute', direction = 'north') ->
     @$el.css {
       position : pos
       top      : if direction == 'north' then @settings.defaultTop else 'auto'
       bottom   : if direction == 'south' then @settings.defaultBottom else 'auto'
+      left     : @left
     }
 
   onScroll: (scrollTop, viewportHeight) ->
@@ -35,8 +57,48 @@ class Column
     return @setPosition('absolute', 'north') if scrollTop < @top
     return @setPosition('absolute', 'south') if scrollTop >= @bottom
 
+  # return to default state on destroy
+  destroy: -> @setPosition()
 
-class Ul
+
+class FeedItem extends Base
+
+  requires: ['columnSelector']
+
+  constructor: ($el, settings) ->
+    super($el, settings)
+    @$el = $el
+    @settings = settings
+    @setDimensions()
+    
+    @$columns = @$el.find(settings.columnSelector)
+
+    height = @height
+    @columns = @$columns.map -> new Column $(this),
+      height: height
+      margin: settings.margin
+      defaultTop: settings.defaultTop
+      defaultBottom: settings.defaultBottom
+    @
+
+  setDimensions: ->
+    @height = @$el.outerHeight(true)
+    @top = @$el.offset().top
+    @bottom = @top + @height
+    @$el.css
+      height: "#{@height}px"
+      position: "relative"
+
+  onScroll: (scrollTop, viewportHeight) ->
+    # only trigger onscroll for columns if we are in the feeditem
+    if scrollTop >= @top and scrollTop < @bottom
+      column.onScroll(scrollTop, viewportHeight) for column in @columns
+
+  destroy: ->
+    column.destroy() for column in @columns
+
+
+class Container extends Base
 
   defaults: 
     defaultTop: '90px'
@@ -45,59 +107,55 @@ class Ul
     active: true
     rendered: false
 
-  requires: []
+  requires: ['feedItems']
 
   constructor: ($el, settings) ->
-    for require in @requires
-      throw "You must pass #{require}" unless settings[require]?
+    super($el, settings)
     throw "Lockit must be called on an element" unless $el.length > 0
 
     @$el = $el
+    @$window = $(window)
     @detectiOS()
     @initRequestAnimationFrame()
 
-    @settings = $.extend @defaults, settings
-    items = @$el?.find('> li')
-    if items
-      @items = items.map -> new Li($(this), @settings)
+    settings = $.extend @defaults, settings
+    @settings = settings
+    @feedItems = @settings.feedItems.map -> new FeedItem($(this), settings)
 
-  onScroll: =>
-    return unless @active
-    scrollTop = @$win.scrollTop()
+    @bindWindowEvents()
+
+  onScroll: ->
+    return unless @settings.active
+    scrollTop = @$window.scrollTop()
 
     if scrollTop == @previousScrollTop
-      return @requestAnimationFrame @onScroll
+      return window.requestAnimationFrame (=> @onScroll())
 
     @scrollingDown = @previousScrollTop < scrollTop
-    for item in @items
+    for item in @feedItems
       item.onScroll scrollTop, @height
 
     @previousScrollTop = scrollTop
 
-    @requestAnimationFrame @onScroll
-
-  recomputeEachLiHeight: -> item.setWayPointThrottled() for item in @items
-  repositionEachLi: -> item.onScroll(@previousScrollTop, @$win.height()) for item in @items
+    window.requestAnimationFrame (=> @onScroll())
 
   onResize: ->
-    @setMaxWidth()
-    for item in @items
-      item.onResize()
-      item.onScroll @previousScrollTop, @$win.height()
-    @height = @$win.outerHeight(true)
+    for item in @feedItems
+      item.onScroll @previousScrollTop, @$window.height()
+    @height = @$window.outerHeight(true)
 
   bindWindowEvents: ->
-    @requestAnimationFrame @onScroll
+    window.requestAnimationFrame (=> @onScroll())
     unless @IS_IOS
-      @$win.bind 'resize.feedItem', @debounce(@onResize, 100)
+      @$window.bind 'resize.feedItem', @debounce(@onResize, 100)
 
-  unbindWindowEvents: -> @$win.unbind('.feedItem')
+  unbindWindowEvents: -> @$window.unbind('.feedItem')
 
   destroy: ->
     @settings.rendered = false
     @setttings.active = false
-    @item.destroy() for item in @items
-
+    @feedItems.destroy() for item in @items
+    @unbindWindowEvents()
 
 
   ##
@@ -114,10 +172,9 @@ class Ul
       clearTimeout timeout
       timeout = setTimeout(throttler, wait)
 
-  # iOS has a unique set of scroll issues
-  # we identify ios devices and bind on resize instead of setinterval
+  # Identify iOS devices and bind on resize instead of setinterval
   #
-  # issues:
+  # iOS has a unique set of scroll issues
   # - does not update scrollTop until touchEnd event is fired (does not update while scrolling -- only when done)
   # - resize event fires when document height or width change (such as when items are added to the dom)
   detectiOS: ->
@@ -128,40 +185,41 @@ class Ul
   # requestAnimationFrame polyfill by Erik Moller
   # fixes from Paul Irish and Tino Zijdel
   initRequestAnimationFrame: ->
-    if window.requestAnimationFrame
-      # requestAnimationFrame is always paired with cancelAnimationFrame
-      @requestAnimationFrame = window.requestAnimationFrame
-      @cancelAnimationFrame = window.cancelAnimationFrame
-      return
+    return if window.requestAnimationFrame
 
     lastTime = 0
     vendors = ['ms', 'moz', 'webkit', 'o']
-    for vendor in vendors when not @requestAnimationFrame
-      @requestAnimationFrame = window["#{vendor}RequestAnimationFrame"]
-      @cancelAnimationFrame = window["#{vendor}CancelAnimationFrame"] or window["#{vendor}CancelAnimationFrame"]
+    for vendor in vendors when not window.requestAnimationFrame
+      window.requestAnimationFrame = window["#{vendor}RequestAnimationFrame"]
 
-    unless @requestAnimationFrame
-      @requestAnimationFrame = (callback, element) ->
+    unless window.requestAnimationFrame
+      window.requestAnimationFrame = (callback, element) ->
         currTime = new Date().getTime()
         timeToCall = Math.max(0, 16 - (currTime - lastTime))
         id = window.setTimeout((-> callback(currTime + timeToCall)), timeToCall)
         lastTime = currTime + timeToCall
         id
 
-    unless @cancelAnimationFrame
-      @cancelAnimationFrame = (id) -> clearTimeout id
-
 
 methods =
 
   initialize: (settings) ->
     throw "You must pass settings" unless settings?
-    @ul = new Ul($(@), settings)
+    @container = new Container($(@), settings)
     @
 
   destroy: ->
     $(window).unbind 'resize.lockit'
-    @ul.destroy()
+    @container.destroy()
+
+  # recomputes height / top / bottom etc of each feed item and it columns
+  recompute: ->
+    for feedItem in @container.feedItems
+      feedItem.setDimensions()
+      for column in feedItem.columns
+        colum.setDimensions feedItem.height
+
+  onScroll: -> @container.onScroll()
 
 $.fn.lockit = (method) ->
   if methods[method]?

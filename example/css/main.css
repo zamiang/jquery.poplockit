@@ -34,4 +34,5 @@ body > ul > ul > li > img {
   margin: 0px;
   padding: 0px;
   display: block;
+  background: #eee;
 }

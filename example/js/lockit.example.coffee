@@ -19,9 +19,11 @@ App =
     @columnWidth = @getColumnWidth()
     $('body')
       .html(@generateFeedHtml())
-      .find('> ul').lockit({})
+      .find('> ul').lockit
+        feedItems      : $('body > ul')
+        columnSelector : '> ul'
 
-  getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns) - 40
+  getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns / 10) * 10 - 40
 
   generateFeedHtml: ->
     [1..@defaults.numberItems].map =>

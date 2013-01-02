@@ -1,14 +1,15 @@
 (function() {
-  var $, Column, Ul, methods,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var $, Base, Column, Container, FeedItem, methods,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   $ = jQuery;
 
-  Column = (function() {
+  Base = (function() {
 
-    Column.prototype.requires = ['height', 'margin', 'defaultTop', 'defaultbottom'];
+    Base.prototype.requires = [];
 
-    function Column($el, settings) {
+    function Base($el, settings) {
       var require, _i, _len, _ref;
       _ref = this.requires;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -17,17 +18,35 @@
           throw "You must pass " + require;
         }
       }
+    }
+
+    return Base;
+
+  })();
+
+  Column = (function(_super) {
+
+    __extends(Column, _super);
+
+    Column.prototype.requires = ['height', 'margin', 'defaultTop', 'defaultBottom'];
+
+    function Column($el, settings) {
+      Column.__super__.constructor.call(this, $el, settings);
       this.$el = $el;
       this.settings = settings;
+      this.height = settings.height;
       this.setDimensions();
+      this;
+
     }
 
     Column.prototype.setDimensions = function(height) {
       if (height) {
-        this.settings.height = height;
+        this.height = height;
       }
       this.top = this.$el.offset().top;
-      return this.bottom = top + this.settings.height - this.$el.outerHeight(true) - (this.settings.margin * 2);
+      this.left = this.$el.offset().left;
+      return this.bottom = top + this.height - this.$el.outerHeight(true) - (this.settings.margin * 2);
     };
 
     Column.prototype.setPosition = function(pos, direction) {
@@ -40,7 +59,8 @@
       return this.$el.css({
         position: pos,
         top: direction === 'north' ? this.settings.defaultTop : 'auto',
-        bottom: direction === 'south' ? this.settings.defaultBottom : 'auto'
+        bottom: direction === 'south' ? this.settings.defaultBottom : 'auto',
+        left: this.left
       });
     };
 
@@ -59,13 +79,83 @@
       }
     };
 
+    Column.prototype.destroy = function() {
+      return this.setPosition();
+    };
+
     return Column;
 
-  })();
+  })(Base);
 
-  Ul = (function() {
+  FeedItem = (function(_super) {
 
-    Ul.prototype.defaults = {
+    __extends(FeedItem, _super);
+
+    FeedItem.prototype.requires = ['columnSelector'];
+
+    function FeedItem($el, settings) {
+      var height;
+      FeedItem.__super__.constructor.call(this, $el, settings);
+      this.$el = $el;
+      this.settings = settings;
+      this.setDimensions();
+      this.$columns = this.$el.find(settings.columnSelector);
+      height = this.height;
+      this.columns = this.$columns.map(function() {
+        return new Column($(this), {
+          height: height,
+          margin: settings.margin,
+          defaultTop: settings.defaultTop,
+          defaultBottom: settings.defaultBottom
+        });
+      });
+      this;
+
+    }
+
+    FeedItem.prototype.setDimensions = function() {
+      this.height = this.$el.outerHeight(true);
+      this.top = this.$el.offset().top;
+      this.bottom = this.top + this.height;
+      return this.$el.css({
+        height: "" + this.height + "px",
+        position: "relative"
+      });
+    };
+
+    FeedItem.prototype.onScroll = function(scrollTop, viewportHeight) {
+      var column, _i, _len, _ref, _results;
+      if (scrollTop >= this.top && scrollTop < this.bottom) {
+        _ref = this.columns;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          column = _ref[_i];
+          _results.push(column.onScroll(scrollTop, viewportHeight));
+        }
+        return _results;
+      }
+    };
+
+    FeedItem.prototype.destroy = function() {
+      var column, _i, _len, _ref, _results;
+      _ref = this.columns;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        column = _ref[_i];
+        _results.push(column.destroy());
+      }
+      return _results;
+    };
+
+    return FeedItem;
+
+  })(Base);
+
+  Container = (function(_super) {
+
+    __extends(Container, _super);
+
+    Container.prototype.defaults = {
       defaultTop: '90px',
       defaultBottom: '90px',
       margin: 90,
@@ -73,112 +163,86 @@
       rendered: false
     };
 
-    Ul.prototype.requires = [];
+    Container.prototype.requires = ['feedItems'];
 
-    function Ul($el, settings) {
-      this.onScroll = __bind(this.onScroll, this);
-
-      var items, require, _i, _len, _ref, _ref1;
-      _ref = this.requires;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        require = _ref[_i];
-        if (settings[require] == null) {
-          throw "You must pass " + require;
-        }
-      }
+    function Container($el, settings) {
+      Container.__super__.constructor.call(this, $el, settings);
       if (!($el.length > 0)) {
         throw "Lockit must be called on an element";
       }
       this.$el = $el;
+      this.$window = $(window);
       this.detectiOS();
       this.initRequestAnimationFrame();
-      this.settings = $.extend(this.defaults, settings);
-      items = (_ref1 = this.$el) != null ? _ref1.find('> li') : void 0;
-      if (items) {
-        this.items = items.map(function() {
-          return new Li($(this), this.settings);
-        });
-      }
+      settings = $.extend(this.defaults, settings);
+      this.settings = settings;
+      this.feedItems = this.settings.feedItems.map(function() {
+        return new FeedItem($(this), settings);
+      });
+      this.bindWindowEvents();
     }
 
-    Ul.prototype.onScroll = function() {
-      var item, scrollTop, _i, _len, _ref;
-      if (!this.active) {
+    Container.prototype.onScroll = function() {
+      var item, scrollTop, _i, _len, _ref,
+        _this = this;
+      if (!this.settings.active) {
         return;
       }
-      scrollTop = this.$win.scrollTop();
+      scrollTop = this.$window.scrollTop();
       if (scrollTop === this.previousScrollTop) {
-        return this.requestAnimationFrame(this.onScroll);
+        return window.requestAnimationFrame((function() {
+          return _this.onScroll();
+        }));
       }
       this.scrollingDown = this.previousScrollTop < scrollTop;
-      _ref = this.items;
+      _ref = this.feedItems;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         item.onScroll(scrollTop, this.height);
       }
       this.previousScrollTop = scrollTop;
-      return this.requestAnimationFrame(this.onScroll);
+      return window.requestAnimationFrame((function() {
+        return _this.onScroll();
+      }));
     };
 
-    Ul.prototype.recomputeEachLiHeight = function() {
-      var item, _i, _len, _ref, _results;
-      _ref = this.items;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        _results.push(item.setWayPointThrottled());
-      }
-      return _results;
-    };
-
-    Ul.prototype.repositionEachLi = function() {
-      var item, _i, _len, _ref, _results;
-      _ref = this.items;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
-        _results.push(item.onScroll(this.previousScrollTop, this.$win.height()));
-      }
-      return _results;
-    };
-
-    Ul.prototype.onResize = function() {
+    Container.prototype.onResize = function() {
       var item, _i, _len, _ref;
-      this.setMaxWidth();
-      _ref = this.items;
+      _ref = this.feedItems;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
-        item.onResize();
-        item.onScroll(this.previousScrollTop, this.$win.height());
+        item.onScroll(this.previousScrollTop, this.$window.height());
       }
-      return this.height = this.$win.outerHeight(true);
+      return this.height = this.$window.outerHeight(true);
     };
 
-    Ul.prototype.bindWindowEvents = function() {
-      this.requestAnimationFrame(this.onScroll);
+    Container.prototype.bindWindowEvents = function() {
+      var _this = this;
+      window.requestAnimationFrame((function() {
+        return _this.onScroll();
+      }));
       if (!this.IS_IOS) {
-        return this.$win.bind('resize.feedItem', this.debounce(this.onResize, 100));
+        return this.$window.bind('resize.feedItem', this.debounce(this.onResize, 100));
       }
     };
 
-    Ul.prototype.unbindWindowEvents = function() {
-      return this.$win.unbind('.feedItem');
+    Container.prototype.unbindWindowEvents = function() {
+      return this.$window.unbind('.feedItem');
     };
 
-    Ul.prototype.destroy = function() {
-      var item, _i, _len, _ref, _results;
+    Container.prototype.destroy = function() {
+      var item, _i, _len, _ref;
       this.settings.rendered = false;
       this.setttings.active = false;
       _ref = this.items;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
-        _results.push(this.item.destroy());
+        this.feedItems.destroy();
       }
-      return _results;
+      return this.unbindWindowEvents();
     };
 
-    Ul.prototype.debounce = function(func, wait) {
+    Container.prototype.debounce = function(func, wait) {
       var timeout;
       timeout = 0;
       return function() {
@@ -194,31 +258,27 @@
       };
     };
 
-    Ul.prototype.detectiOS = function() {
+    Container.prototype.detectiOS = function() {
       var uagent;
       uagent = navigator.userAgent.toLowerCase();
       return this.IS_IOS = uagent.match(/(iPhone|iPod|iPad)/i) != null;
     };
 
-    Ul.prototype.initRequestAnimationFrame = function() {
+    Container.prototype.initRequestAnimationFrame = function() {
       var lastTime, vendor, vendors, _i, _len;
       if (window.requestAnimationFrame) {
-        this.requestAnimationFrame = window.requestAnimationFrame;
-        this.cancelAnimationFrame = window.cancelAnimationFrame;
         return;
       }
       lastTime = 0;
       vendors = ['ms', 'moz', 'webkit', 'o'];
       for (_i = 0, _len = vendors.length; _i < _len; _i++) {
         vendor = vendors[_i];
-        if (!(!this.requestAnimationFrame)) {
-          continue;
+        if (!window.requestAnimationFrame) {
+          window.requestAnimationFrame = window["" + vendor + "RequestAnimationFrame"];
         }
-        this.requestAnimationFrame = window["" + vendor + "RequestAnimationFrame"];
-        this.cancelAnimationFrame = window["" + vendor + "CancelAnimationFrame"] || window["" + vendor + "CancelAnimationFrame"];
       }
-      if (!this.requestAnimationFrame) {
-        this.requestAnimationFrame = function(callback, element) {
+      if (!window.requestAnimationFrame) {
+        return window.requestAnimationFrame = function(callback, element) {
           var currTime, id, timeToCall;
           currTime = new Date().getTime();
           timeToCall = Math.max(0, 16 - (currTime - lastTime));
@@ -229,28 +289,46 @@
           return id;
         };
       }
-      if (!this.cancelAnimationFrame) {
-        return this.cancelAnimationFrame = function(id) {
-          return clearTimeout(id);
-        };
-      }
     };
 
-    return Ul;
+    return Container;
 
-  })();
+  })(Base);
 
   methods = {
     initialize: function(settings) {
       if (settings == null) {
         throw "You must pass settings";
       }
-      this.ul = new Ul($(this), settings);
+      this.container = new Container($(this), settings);
       return this;
     },
     destroy: function() {
       $(window).unbind('resize.lockit');
-      return this.ul.destroy();
+      return this.container.destroy();
+    },
+    recompute: function() {
+      var column, feedItem, _i, _len, _ref, _results;
+      _ref = this.container.feedItems;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        feedItem = _ref[_i];
+        feedItem.setDimensions();
+        _results.push((function() {
+          var _j, _len1, _ref1, _results1;
+          _ref1 = feedItem.columns;
+          _results1 = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            column = _ref1[_j];
+            _results1.push(colum.setDimensions(feedItem.height));
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    },
+    onScroll: function() {
+      return this.container.onScroll();
     }
   };
 

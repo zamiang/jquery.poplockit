@@ -10,10 +10,13 @@
     },
     initialize: function() {
       this.columnWidth = this.getColumnWidth();
-      return $('body').html(this.generateFeedHtml()).find('> ul').lockit({});
+      return $('body').html(this.generateFeedHtml()).find('> ul').lockit({
+        feedItems: $('body > ul'),
+        columnSelector: '> ul'
+      });
     },
     getColumnWidth: function() {
-      return Math.floor($('body').width() / this.defaults.numberColumns) - 40;
+      return Math.floor($('body').width() / this.defaults.numberColumns / 10) * 10 - 40;
     },
     generateFeedHtml: function() {
       var _i, _ref, _results,
