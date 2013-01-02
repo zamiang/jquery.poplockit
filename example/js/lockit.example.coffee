@@ -22,8 +22,6 @@ App =
       .find('> ul').lockit
         feedItems      : $('body > ul')
         columnSelector : '> ul'
-        defaultTop     : '90px'
-        defaultBottom  : '90px'
         margin         : 90
 
   getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns / 10) * 10 - 40

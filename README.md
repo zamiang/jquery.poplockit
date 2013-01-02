@@ -1,8 +1,8 @@
 [![build status](https://api.travis-ci.org/zamiang/lockit-js.png)](http://travis-ci.org/zamiang/lockit-js)
 
-# Lockit
+# jQuery.popLockIt
 
-The best jQuery plugin ever.
+A jQuery plugin 
 
 ## Getting Started
 Download the [production version][min] or the [development version][max].
@@ -17,7 +17,11 @@ In your web page:
 <script src="dist/lockit.min.js"></script>
 <script>
 jQuery(function($) {
-  $.awesome(); // "awesome"
+  $('#feed').popLockIt({
+    feedItems      : $('#feed > article'),
+    columnSelector : '> .column',
+    margin         : 90
+  });
 });
 </script>
 ```
@@ -37,16 +41,11 @@ Please don't edit files in the `dist` subdirectory as they are generated via gru
 1. Run `grunt` (compiles coffeescripts and runs tests)
 1. Run `grunt watch` while editing files to auto-compile coffeescripts and run tests
 
-Assuming that you don't see any red, you're ready to go. Just be sure to run `grunt` after making any changes, to ensure that nothing is broken.
-
 ### Submitting pull requests
 
-1. Create a new branch, please don't work in your `master` branch directly.
-1. Add failing tests for the change you want to make. Run `grunt` to see the tests fail.
-1. Fix stuff.
-1. Run `grunt` to see if the tests pass. Repeat steps 2-4 until done.
+1. Add tests for the change you want to make. Run `grunt` to see if tests fail.
 1. Open `test/*.html` unit test file(s) in actual browser to ensure tests pass everywhere.
-1. Update the documentation to reflect any changes.
+1. Run `grunt` to make sure nothing is broken
 1. Push to your fork and submit a pull request.
 
 ## License
@@ -73,4 +72,3 @@ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
-

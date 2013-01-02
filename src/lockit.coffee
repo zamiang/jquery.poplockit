@@ -5,7 +5,7 @@
 # Licensed under the MIT license.
 #
 # DOM STRUCTURE:
-# Container
+# Feed
 # -- FeedItem
 # ---- Column
 # ---- Column
@@ -27,7 +27,7 @@ class Base
 
 class Column extends Base
 
-  requires: ['height', 'margin', 'defaultTop', 'defaultBottom']
+  requires: ['height', 'margin']
 
   constructor: ($el, settings) ->
     super($el, settings)
@@ -46,8 +46,8 @@ class Column extends Base
   setPosition: (pos = 'absolute', direction = 'north') ->
     @$el.css
       position : pos
-      top      : if direction == 'north' then @settings.defaultTop else 'auto'
-      bottom   : if direction == 'south' then @settings.defaultBottom else 'auto'
+      top      : if direction == 'north' then @settings.margin else 'auto'
+      bottom   : if direction == 'south' then @settings.margin else 'auto'
       left     : @left
 
   onScroll: (scrollTop, viewportHeight) ->
@@ -76,8 +76,6 @@ class FeedItem extends Base
     @columns = @$columns.map -> new Column $(this),
       height: height
       margin: settings.margin
-      defaultTop: settings.defaultTop
-      defaultBottom: settings.defaultBottom
     @
 
   setDimensions: ->
@@ -101,7 +99,7 @@ class FeedItem extends Base
     column.destroy() for column in @columns
 
 
-class Container extends Base
+class Feed extends Base
 
   defaults: 
     active: true
@@ -153,7 +151,7 @@ class Container extends Base
 
   destroy: ->
     @settings.rendered = false
-    @setttings.active = false
+    @settings.active = false
     @feedItems.destroy() for item in @items
     @unbindWindowEvents()
 
@@ -184,6 +182,8 @@ class Container extends Base
   # http://paulirish.com/2011/requestanimationframe-for-smart-animating/
   # requestAnimationFrame polyfill by Erik Moller
   # fixes from Paul Irish and Tino Zijdel
+  #
+  # todo: put this on @
   initRequestAnimationFrame: ->
     return if window.requestAnimationFrame
 
@@ -205,21 +205,21 @@ methods =
 
   initialize: (settings) ->
     throw "You must pass settings" unless settings?
-    @container = new Container($(@), settings)
+    @feed = new Feed($(@), settings)
     @
 
   destroy: ->
     $(window).unbind 'resize.lockit'
-    @container.destroy()
+    @feed.destroy()
 
-  # recomputes height / top / bottom etc of each feed item and it columns
+  # recomputes height / top / bottom etc of each feed item and its columns
   recompute: ->
-    for feedItem in @container.feedItems
+    for feedItem in @feed.feedItems
       feedItem.setDimensions()
       for column in feedItem.columns
         colum.setDimensions feedItem.height
 
-  onScroll: -> @container.onScroll()
+  onScroll: -> @feed.onScroll()
 
 $.fn.lockit = (method) ->
   if methods[method]?

@@ -1,5 +1,5 @@
 (function() {
-  var $, Base, Column, Container, FeedItem, methods,
+  var $, Base, Column, Feed, FeedItem, methods,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -29,7 +29,7 @@
 
     __extends(Column, _super);
 
-    Column.prototype.requires = ['height', 'margin', 'defaultTop', 'defaultBottom'];
+    Column.prototype.requires = ['height', 'margin'];
 
     function Column($el, settings) {
       Column.__super__.constructor.call(this, $el, settings);
@@ -59,8 +59,8 @@
       }
       return this.$el.css({
         position: pos,
-        top: direction === 'north' ? this.settings.defaultTop : 'auto',
-        bottom: direction === 'south' ? this.settings.defaultBottom : 'auto',
+        top: direction === 'north' ? this.settings.margin : 'auto',
+        bottom: direction === 'south' ? this.settings.margin : 'auto',
         left: this.left
       });
     };
@@ -105,9 +105,7 @@
       this.columns = this.$columns.map(function() {
         return new Column($(this), {
           height: height,
-          margin: settings.margin,
-          defaultTop: settings.defaultTop,
-          defaultBottom: settings.defaultBottom
+          margin: settings.margin
         });
       });
       this;
@@ -160,20 +158,20 @@
 
   })(Base);
 
-  Container = (function(_super) {
+  Feed = (function(_super) {
 
-    __extends(Container, _super);
+    __extends(Feed, _super);
 
-    Container.prototype.defaults = {
+    Feed.prototype.defaults = {
       active: true,
       rendered: false
     };
 
-    Container.prototype.requires = ['feedItems'];
+    Feed.prototype.requires = ['feedItems'];
 
-    function Container($el, settings) {
+    function Feed($el, settings) {
       this.onResize = __bind(this.onResize, this);
-      Container.__super__.constructor.call(this, $el, settings);
+      Feed.__super__.constructor.call(this, $el, settings);
       if (!($el.length > 0)) {
         throw "Lockit must be called on an element";
       }
@@ -189,7 +187,7 @@
       this.bindWindowEvents();
     }
 
-    Container.prototype.onScroll = function() {
+    Feed.prototype.onScroll = function() {
       var item, scrollTop, _i, _len, _ref,
         _this = this;
       if (!this.settings.active) {
@@ -213,7 +211,7 @@
       }));
     };
 
-    Container.prototype.onResize = function() {
+    Feed.prototype.onResize = function() {
       var item, _i, _len, _ref;
       _ref = this.feedItems;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -223,7 +221,7 @@
       return this.height = this.$window.outerHeight(true);
     };
 
-    Container.prototype.bindWindowEvents = function() {
+    Feed.prototype.bindWindowEvents = function() {
       var _this = this;
       window.requestAnimationFrame((function() {
         return _this.onScroll();
@@ -233,14 +231,14 @@
       }
     };
 
-    Container.prototype.unbindWindowEvents = function() {
+    Feed.prototype.unbindWindowEvents = function() {
       return this.$window.unbind('.feedItem');
     };
 
-    Container.prototype.destroy = function() {
+    Feed.prototype.destroy = function() {
       var item, _i, _len, _ref;
       this.settings.rendered = false;
-      this.setttings.active = false;
+      this.settings.active = false;
       _ref = this.items;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
@@ -249,7 +247,7 @@
       return this.unbindWindowEvents();
     };
 
-    Container.prototype.debounce = function(func, wait) {
+    Feed.prototype.debounce = function(func, wait) {
       var timeout;
       timeout = 0;
       return function() {
@@ -265,13 +263,13 @@
       };
     };
 
-    Container.prototype.detectiOS = function() {
+    Feed.prototype.detectiOS = function() {
       var uagent;
       uagent = navigator.userAgent.toLowerCase();
       return this.IS_IOS = uagent.match(/(iPhone|iPod|iPad)/i) != null;
     };
 
-    Container.prototype.initRequestAnimationFrame = function() {
+    Feed.prototype.initRequestAnimationFrame = function() {
       var lastTime, vendor, vendors, _i, _len;
       if (window.requestAnimationFrame) {
         return;
@@ -298,7 +296,7 @@
       }
     };
 
-    return Container;
+    return Feed;
 
   })(Base);
 
@@ -307,16 +305,16 @@
       if (settings == null) {
         throw "You must pass settings";
       }
-      this.container = new Container($(this), settings);
+      this.feed = new Feed($(this), settings);
       return this;
     },
     destroy: function() {
       $(window).unbind('resize.lockit');
-      return this.container.destroy();
+      return this.feed.destroy();
     },
     recompute: function() {
       var column, feedItem, _i, _len, _ref, _results;
-      _ref = this.container.feedItems;
+      _ref = this.feed.feedItems;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         feedItem = _ref[_i];
@@ -335,7 +333,7 @@
       return _results;
     },
     onScroll: function() {
-      return this.container.onScroll();
+      return this.feed.onScroll();
     }
   };
 

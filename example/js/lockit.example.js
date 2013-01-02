@@ -13,8 +13,6 @@
       return $('body').html(this.generateFeedHtml()).find('> ul').lockit({
         feedItems: $('body > ul'),
         columnSelector: '> ul',
-        defaultTop: '90px',
-        defaultBottom: '90px',
         margin: 90
       });
     },
