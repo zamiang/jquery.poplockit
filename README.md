@@ -2,7 +2,11 @@
 
 # jQuery.popLockIt
 
-A jQuery plugin 
+A jQuery plugin that does...
+
+## Example
+
+See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/lockit-js/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
 ## Getting Started
 Download the [production version][https://raw.github.com/zamiang/lockit-js/master/dist/lockit.min.js] or the [development version][https://raw.github.com/zamiang/lockit-js/master/dist/lockit.js].
@@ -55,9 +59,6 @@ Manually run the onScroll event. Recommend running this if you have hidden the f
 
 Add items to the feed. Takes a jQuery object containing the new feed items.
 
-
-## Examples
-See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/lockit-js/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
 ## Contributing
 
