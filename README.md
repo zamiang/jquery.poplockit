@@ -23,7 +23,7 @@ jQuery(function($) {
 ```
 
 ## Examples
-_(Coming soon)_
+See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/lockit-js/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
 ## Contributing
 
