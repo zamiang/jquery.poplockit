@@ -75,7 +75,7 @@
 
     Ul.prototype.requires = [];
 
-    function Ul(settings) {
+    function Ul($el, settings) {
       this.onScroll = __bind(this.onScroll, this);
 
       var items, require, _i, _len, _ref, _ref1;
@@ -86,6 +86,10 @@
           throw "You must pass " + require;
         }
       }
+      if (!($el.length > 0)) {
+        throw "Lockit must be called on an element";
+      }
+      this.$el = $el;
       this.detectiOS();
       this.initRequestAnimationFrame();
       this.settings = $.extend(this.defaults, settings);
@@ -241,7 +245,7 @@
       if (settings == null) {
         throw "You must pass settings";
       }
-      this.ul = new Ul(settings);
+      this.ul = new Ul($(this), settings);
       return this;
     },
     destroy: function() {

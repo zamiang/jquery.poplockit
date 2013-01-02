@@ -1,4 +1,4 @@
-# lockito
+# jquery.lockit
 # https://github.com/zamiang/lockit-js
 #
 # Copyright (c) 2012 Brennan Moore
@@ -47,10 +47,12 @@ class Ul
 
   requires: []
 
-  constructor: (settings) ->
+  constructor: ($el, settings) ->
     for require in @requires
       throw "You must pass #{require}" unless settings[require]?
+    throw "Lockit must be called on an element" unless $el.length > 0
 
+    @$el = $el
     @detectiOS()
     @initRequestAnimationFrame()
 
@@ -113,6 +115,9 @@ class Ul
       timeout = setTimeout(throttler, wait)
 
   # iOS has a unique set of scroll issues
+  # we identify ios devices and bind on resize instead of setinterval
+  #
+  # issues:
   # - does not update scrollTop until touchEnd event is fired (does not update while scrolling -- only when done)
   # - resize event fires when document height or width change (such as when items are added to the dom)
   detectiOS: ->
@@ -151,7 +156,7 @@ methods =
 
   initialize: (settings) ->
     throw "You must pass settings" unless settings?
-    @ul = new Ul(settings)
+    @ul = new Ul($(@), settings)
     @
 
   destroy: ->

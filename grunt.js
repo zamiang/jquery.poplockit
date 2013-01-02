@@ -47,7 +47,7 @@ module.exports = function(grunt) {
         },
         watch: {
             files: ['<config:lint.files>', '**/*.coffee'],
-            tasks: ['coffee', 'qunit']
+            tasks: ['coffee']
         },
         jshint: {
             options: {

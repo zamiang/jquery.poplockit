@@ -1,6 +1,6 @@
-/*! Lockit - v0.1.0 - 2012-12-31
+/*! Lockit - v0.1.0 - 2013-01-02
 * https://github.com/zamiang/lockit-js
-* Copyright (c) 2012 Brennan Moore; Licensed MIT */
+* Copyright (c) 2013 Brennan Moore; Licensed MIT */
 
 (function() {
   var $, Column, Ul, methods,
@@ -79,7 +79,7 @@
 
     Ul.prototype.requires = [];
 
-    function Ul(settings) {
+    function Ul($el, settings) {
       this.onScroll = __bind(this.onScroll, this);
 
       var items, require, _i, _len, _ref, _ref1;
@@ -90,6 +90,10 @@
           throw "You must pass " + require;
         }
       }
+      if (!($el.length > 0)) {
+        throw "Lockit must be called on an element";
+      }
+      this.$el = $el;
       this.detectiOS();
       this.initRequestAnimationFrame();
       this.settings = $.extend(this.defaults, settings);
@@ -245,7 +249,7 @@
       if (settings == null) {
         throw "You must pass settings";
       }
-      this.ul = new Ul(settings);
+      this.ul = new Ul($(this), settings);
       return this;
     },
     destroy: function() {
