@@ -105,6 +105,7 @@ class Feed extends Base
     active: true
     rendered: false
 
+  feedItems: []
   requires: ['feedItems']
 
   constructor: ($el, settings) ->
@@ -116,11 +117,14 @@ class Feed extends Base
     @detectiOS()
     @initRequestAnimationFrame()
 
-    settings = $.extend @defaults, settings
-    @settings = settings
-    @feedItems = @settings.feedItems.map -> new FeedItem($(this), settings)
+    @settings = $.extend @defaults, settings
+
+    @addFeedIitems @settings.feedItems
 
     @bindWindowEvents()
+
+  addFeedIitems: ($feedItems)
+    @feedItems = @feedItems.concat($feedItems.map(index, el) => new FeedItem($(el), @settings))
 
   onScroll: ->
     return unless @settings.active
@@ -220,6 +224,11 @@ methods =
         colum.setDimensions feedItem.height
 
   onScroll: -> @feed.onScroll()
+
+  addFeedItems: ($feedItems) ->
+    throw "You must pass $feedItems" unless $feedItems? and $feedItems.length
+    @feed.addFeedIitems $feedItems
+
 
 $.fn.lockit = (method) ->
   if methods[method]?

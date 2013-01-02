@@ -5,10 +5,7 @@
 A jQuery plugin 
 
 ## Getting Started
-Download the [production version][min] or the [development version][max].
-
-[min]: https://raw.github.com/zamiang/lockit-js/master/dist/lockit.min.js
-[max]: https://raw.github.com/zamiang/lockit-js/master/dist/lockit.js
+Download the [production version][https://raw.github.com/zamiang/lockit-js/master/dist/lockit.min.js] or the [development version][https://raw.github.com/zamiang/lockit-js/master/dist/lockit.js].
 
 In your web page:
 
@@ -25,6 +22,39 @@ jQuery(function($) {
 });
 </script>
 ```
+
+## Options
+
+### feedItems
+
+jQuery object for you feed items.
+
+### columnSelector
+
+selector string to get the columns for your feed items.
+
+### margin
+
+*todo*
+
+## Methods
+
+### destroy
+
+returns feedItems and their Columns to their default positions and unbinds all events.
+
+### recompute
+
+Recomputes height / top / bottom etc of each feed item and its columns. Run if the size of any of your feed items has changed
+
+### onScroll
+
+Manually run the onScroll event. Recommend running this if you have hidden the feed and are now re-showing it.
+
+### addFeedItems($feedItems)
+
+Add items to the feed. Takes a jQuery object containing the new feed items.
+
 
 ## Examples
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/lockit-js/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
