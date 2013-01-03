@@ -44,7 +44,7 @@ module.exports = function(grunt) {
                 }
             },
             spec: {
-                src: ['specs/**/*.coffee'],
+                src: ['spec/**/*.coffee'],
                 options: {
                     bare: false,
                     preserve_dirs: true
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
             }
         },
         watch: {
-            files: ['<config:lint.files>', '**/*.coffee'],
+            files: ['src/**/*.coffee', 'spec/**/*.coffee', 'example/**/*.coffee'],
             tasks: ['coffee']
         },
         jshint: {
