@@ -1,0 +1,29 @@
+{
+    "name": "jQuery.popLockIt",
+    "title": "jQuery.popLockIt",
+    "description": "The best jQuery plugin ever.",
+    "version": "0.1.0",
+    "homepage": "https://github.com/zamiang/jquery.popLockIt",
+    "author": {
+        "name": "Brennan Moore",
+        "email": "brennanmoore@gmail.com",
+        "url": "http://zamiang.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/zamiang/jquery.poplockit.git"
+    },
+    "bugs": {
+        "url": "https://github.com/zamiang/jquery.poplockit/issues"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/zamiang/jquery.poplockit/blob/master/LICENSE-MIT"
+        }
+    ],
+    "dependencies": {
+        "jquery": "1.7"
+    },
+    "keywords": []
+}

@@ -167,25 +167,37 @@
       rendered: false
     };
 
+    Feed.prototype.feedItems = [];
+
     Feed.prototype.requires = ['feedItems'];
 
     function Feed($el, settings) {
       this.onResize = __bind(this.onResize, this);
       Feed.__super__.constructor.call(this, $el, settings);
       if (!($el.length > 0)) {
-        throw "Lockit must be called on an element";
+        throw "PopLockIt must be called on an element";
       }
       this.$el = $el;
       this.$window = $(window);
       this.detectiOS();
       this.initRequestAnimationFrame();
-      settings = $.extend(this.defaults, settings);
-      this.settings = settings;
-      this.feedItems = this.settings.feedItems.map(function() {
-        return new FeedItem($(this), settings);
-      });
+      this.settings = $.extend(this.defaults, settings);
+      this.addFeedIitems(this.settings.feedItems);
       this.bindWindowEvents();
     }
+
+    Feed.prototype.addFeedIitems = function($feedItems) {
+      var $item;
+      return this.feedItems = this.feedItems.concat((function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = $feedItems.length; _i < _len; _i++) {
+          $item = $feedItems[_i];
+          _results.push(new FeedItem($($item), this.settings));
+        }
+        return _results;
+      }).call(this));
+    };
 
     Feed.prototype.onScroll = function() {
       var item, scrollTop, _i, _len, _ref,
@@ -309,7 +321,7 @@
       return this;
     },
     destroy: function() {
-      $(window).unbind('resize.lockit');
+      $(window).unbind('resize.popLockIt');
       return this.feed.destroy();
     },
     recompute: function() {
@@ -334,16 +346,22 @@
     },
     onScroll: function() {
       return this.feed.onScroll();
+    },
+    addFeedItems: function($feedItems) {
+      if (!(($feedItems != null) && $feedItems.length)) {
+        throw "You must pass $feedItems";
+      }
+      return this.feed.addFeedIitems($feedItems);
     }
   };
 
-  $.fn.lockit = function(method) {
+  $.fn.popLockIt = function(method) {
     if (methods[method] != null) {
       return methods[method].apply(this, Array.prototype.slice.call(arguments, 1));
     } else if (typeof method === "object" || !(method != null)) {
       return methods.initialize.apply(this, arguments);
     } else {
-      return $.error("Method " + method + " does not exist on jQuery.lockit");
+      return $.error("Method " + method + " does not exist on jQuery.popLockIt");
     }
   };
 

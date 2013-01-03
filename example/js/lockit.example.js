@@ -10,7 +10,7 @@
     },
     initialize: function() {
       this.columnWidth = this.getColumnWidth();
-      return $('body').html(this.generateFeedHtml()).find('> ul').lockit({
+      return $('body').html(this.generateFeedHtml()).find('> ul').popLockIt({
         feedItems: $('body > ul'),
         columnSelector: '> ul',
         margin: 90

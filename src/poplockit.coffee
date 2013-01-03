@@ -1,5 +1,5 @@
-# jquery.lockit
-# https://github.com/zamiang/lockit-js
+# jquery.popLockIt
+# https://github.com/zamiang/jquery.popLockIt
 #
 # Copyright (c) 2012 Brennan Moore
 # Licensed under the MIT license.
@@ -110,7 +110,7 @@ class Feed extends Base
 
   constructor: ($el, settings) ->
     super($el, settings)
-    throw "Lockit must be called on an element" unless $el.length > 0
+    throw "PopLockIt must be called on an element" unless $el.length > 0
 
     @$el = $el
     @$window = $(window)
@@ -123,8 +123,8 @@ class Feed extends Base
 
     @bindWindowEvents()
 
-  addFeedIitems: ($feedItems)
-    @feedItems = @feedItems.concat($feedItems.map(index, el) => new FeedItem($(el), @settings))
+  addFeedIitems: ($feedItems) ->
+    @feedItems = @feedItems.concat(new FeedItem($($item), @settings) for $item in $feedItems)
 
   onScroll: ->
     return unless @settings.active
@@ -213,7 +213,7 @@ methods =
     @
 
   destroy: ->
-    $(window).unbind 'resize.lockit'
+    $(window).unbind 'resize.popLockIt'
     @feed.destroy()
 
   # recomputes height / top / bottom etc of each feed item and its columns
@@ -230,10 +230,10 @@ methods =
     @feed.addFeedIitems $feedItems
 
 
-$.fn.lockit = (method) ->
+$.fn.popLockIt = (method) ->
   if methods[method]?
     methods[method].apply @, Array::slice.call(arguments, 1)
   else if typeof method is "object" or not method?
     methods.initialize.apply @, arguments
   else
-    $.error "Method #{method} does not exist on jQuery.lockit"
+    $.error "Method #{method} does not exist on jQuery.popLockIt"

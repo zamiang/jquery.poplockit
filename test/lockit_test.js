@@ -24,20 +24,24 @@
 
     module('jQuery#lockit', {
         setup: function() {
-            this.elems = $('#qunit-fixture').children();
+            this.$el = $('#qunit-fixture');
         }
     });
 
     test('is chainable', function() {
-        strictEqual(this.elems.lockit('initialize', {}), this.elems, 'should be chaninable');
+        strictEqual(this.$el.popLockIt({        
+            feedItems      : this.$el.children(),
+            columnSelector : '.',
+            margin         : 10
+        }), this.$el, 'should be chaninable');
     });
 
     test('requires settings', function() {
-        raises(function() { this.elems.lockit(); }, Error, "must throw error to pass");
+        raises(function() { this.$el.popLockIt(); }, Error, "must throw error to pass");
     });
 
     test('raises error on invalid method', function() {
-        raises(function() { this.elems.lockit('invalid'); }, Error, "must throw error to pass");
+        raises(function() { this.$el.popLockIt('invalid'); }, Error, "must throw error to pass");
     });
 
 }(jQuery));

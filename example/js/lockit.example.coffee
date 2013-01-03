@@ -1,12 +1,12 @@
 #
-# Lockit.js example code
+# PopLockIt.js example code
 #
-# Generates html to demonstrate what lockit.js does
+# Generates html to demonstrate what popLockIt.js does
 # creates 'feedItems' that consist of columns of placekittens
 # each of these columns will 'pop' and 'lock' in place as the user scrolls
 #
 # @requires jQuery
-# @requires lockit.js
+# @requires popLockIt.js
 
 App = 
   defaults:
@@ -19,7 +19,7 @@ App =
     @columnWidth = @getColumnWidth()
     $('body')
       .html(@generateFeedHtml())
-      .find('> ul').lockit
+      .find('> ul').popLockIt
         feedItems      : $('body > ul')
         columnSelector : '> ul'
         margin         : 90

@@ -1,4 +1,4 @@
-[![build status](https://api.travis-ci.org/zamiang/lockit-js.png)](http://travis-ci.org/zamiang/lockit-js)
+[![build status](https://api.travis-ci.org/zamiang/jquery.poplockit.png)](http://travis-ci.org/zamiang/jquery.poplockit)
 
 # jQuery.popLockIt
 
@@ -6,16 +6,16 @@ A jQuery plugin that does...
 
 ## Example
 
-See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/lockit-js/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
+See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
 ## Usage
 
-Download the [production version](https://raw.github.com/zamiang/lockit-js/master/dist/lockit.min.js) or the [development version](https://raw.github.com/zamiang/lockit-js/master/dist/lockit.js).
+Download the [production version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/lockit.min.js) or the [development version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/lockit.js).
 
 Include required Javascripts
 ```html
 <script src="jquery.js"></script>
-<script src="dist/lockit.min.js"></script>
+<script src="dist/poplockit.min.js"></script>
 ```
 
 Create html like this:
