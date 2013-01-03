@@ -1,7 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
 
 body {
-  padding:50px;
+  padding:0px;
+  margin:0px;
   font:14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
   color:#777;
   font-weight:300;
@@ -46,8 +47,7 @@ a small {
 }
 
 .wrapper {
-  width:1050px;
-  margin:0 auto;
+  margin: 0 auto;
 }
 
 blockquote {
@@ -98,6 +98,7 @@ img {
 .column {
   display: inline-block;
   vertical-align: top;
+  text-align: left;
 }
 
 .column.left {
@@ -148,8 +149,11 @@ strong {
 }
 
 .feed_item {
+  width: 100%;
+  min-width: 1050px;
   border-bottom: 1px solid #ccc;
   padding: 80px 0px;
+  text-align: center
 }
 
 .feed_item:last-child {

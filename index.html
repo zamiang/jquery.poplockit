@@ -15,11 +15,20 @@
     <div class="wrapper">
       <div class="feed_item">
         <div class="column left">
-          <h1>jquery.poplockit</h1>
+          <h1>jQuery.popLockIt</h1>
           <p>Stop drop n lock it…in Javascript</p>
           <a href="https://github.com/zamiang/jquery.popLockIt/dist/jquery.poplockit.min.js"><strong>Production Version</strong></a><br />
           <a href="https://github.com/zamiang/jquery.popLockIt/dist/jquery.poplockit.js"><strong>Development Version</strong></a><br />
           <a href="https://github.com/zamiang/jquery.popLockIt"><strong>View On GitHub</strong></a>
+        </div>
+        <div class="column right">
+          <img height=200 width=200 src="http://placekitten.com/200/200" />
+        </div>
+      </div>
+      <div class="feed_item">
+        <div class="column left">
+          <h1>Usage</h1>
+          <p>How to get started with jquery.poplockit</p>
         </div>
         <div class="column center">
           <h3>Usage</h3>
@@ -130,8 +139,6 @@
         </div>
         <div class="column center">
           <img height=200 width=500 src="http://placekitten.com/500/200" />
-          <img height=250 width=500 src="http://placekitten.com/500/250" />
-          <img height=300 width=500 src="http://placekitten.com/500/300" />
         </div>
         <div class="column right">
           small contextual info!
@@ -142,11 +149,9 @@
     <script src="javascripts/jquery.js"></script>
     <script src="javascripts/jquery.poplockit.min.js"></script>
     <script>
-$('.wrapper').popLockIt({
-  feedItems      : $('.wrapper > feed_item'),
-  columnSelector : '> .column',
-  margin         : 90
-});
+      $(function() {      
+        $('.wrapper').popLockIt({feedItems: $('.wrapper > .feed_item'), columnSelector: '> .column', margin: 90 });
+      });
     </script>
   </body>
 </html>
