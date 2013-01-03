@@ -2,7 +2,7 @@
 
   beforeEach(function() {
     $("<div id='test-container'></div>").appendTo('body');
-    return window.$el = $('#test_container');
+    return window.$el = $('#test-container');
   });
 
   afterEach(function() {

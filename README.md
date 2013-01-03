@@ -88,7 +88,6 @@ Please don't edit files in the `dist` subdirectory as they are generated via gru
 ### Submitting pull requests
 
 1. Add tests for the change you want to make. Run `grunt` to see if tests fail.
-1. Open `test/*.html` unit test file(s) in actual browser to ensure tests pass everywhere.
 1. Run `grunt` to make sure nothing is broken
 1. Push to your fork and submit a pull request.
 
