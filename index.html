@@ -4,73 +4,149 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>jquery.poplockit by zamiang</title>
-
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
   </head>
   <body>
     <div class="wrapper">
-      <header>
-        <h1>jquery.poplockit</h1>
-        <p>Stop drop n lock it…in Javascript</p>
+      <div class="feed_item">
+        <div class="column left">
+          <h1>jquery.poplockit</h1>
+          <p>Stop drop n lock it…in Javascript</p>
+          <a href="https://github.com/zamiang/jquery.popLockIt/dist/jquery.poplockit.min.js"><strong>Production Version</strong></a><br />
+          <a href="https://github.com/zamiang/jquery.popLockIt/dist/jquery.poplockit.js"><strong>Development Version</strong></a><br />
+          <a href="https://github.com/zamiang/jquery.popLockIt"><strong>View On GitHub</strong></a>
+        </div>
+        <div class="column center">
+          <h3>Usage</h3>
+          <p>Download the production version or the development version.</p>
+          <p>Include required Javascripts</p>
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"dist/poplockit.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
 
-        <p class="view"><a href="https://github.com/zamiang/jquery.popLockIt">View the Project on GitHub <small>zamiang/jquery.popLockIt</small></a></p>
+<p>Create html like this:</p>
 
+<div class="highlight"><pre>  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"feed"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;article&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>Left<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>Center<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>Right<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/article&gt;</span>
+    ...
+  <span class="nt">&lt;/div&gt;</span>
+</pre></div>
 
-        <ul>
-          <li><a href="https://github.com/zamiang/jquery.popLockIt/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/zamiang/jquery.popLockIt/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/zamiang/jquery.popLockIt">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>Welcome to GitHub Pages.</h3>
+<p>Apply the popLockIt plugin</p>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
-
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-<h3>Designer Templates</h3>
-
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
-
-<h3>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/zamiang">zamiang</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'#feed'</span><span class="p">).</span><span class="nx">popLockIt</span><span class="p">({</span>
+  <span class="nx">feedItems</span>      <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#feed &gt; article'</span><span class="p">),</span>
+  <span class="nx">columnSelector</span> <span class="o">:</span> <span class="s1">'&gt; .column'</span><span class="p">,</span>
+  <span class="nx">margin</span>         <span class="o">:</span> <span class="mi">90</span>
+<span class="p">});</span>
+</pre></div>
+        </div>
+        <div class="column right">
+          <img height=200 width=200 src="http://placekitten.com/200/200" />
+          <img height=100 width=200 src="http://placekitten.com/200/100" />
+          <img height=150 width=200 src="http://placekitten.com/200/150" />
+        </div>
+      </div>
+      <div class="feed_item">
+        <div class="column left">
+          <h2>Contributing</h2>
+          <p>Please don't edit files in the dist subdirectory as they
+          are generated via grunt. You'll find source code in the src
+          subdirectory!</p>
+          </div>
+        <div class="column center">
+          <h3>Modifying the code</h3>
+          <ol>
+            <li>Fork and clone the repo.</li>
+            <li>If needed: npm install -g grunt for Grunt</li>
+            <li>If needed: brew install phantomjs for PhantomJS</li>
+            <li>Run npm install to install dependencies</li>
+            <li>Run grunt (compiles coffeescripts and runs tests)</li>
+            <li>Run grunt watch while editing files to auto-compile coffeescripts and run tests</li>
+          </ol>
+          <h3>Submitting pull requests</h3>
+          <ol>
+            <li>Add tests for the change you want to make. Run grunt to see if tests fail.</li>
+            <li>Run grunt to make sure nothing is broken.</li>
+            <li>Push to your fork and submit a pull request.</li>
+          </ol>
+        </div>
+        <div class="column right">
+          <img height=200 width=200 src="/http://placekitten.com/200/200" />
+          <img height=100 width=200 src="http://placekitten.com/200/100" />
+          <img height=150 width=200 src="http://placekitten.com/200/150" />
+        </div>
+      </div>
+      <div class="feed_item">
+        <div class="column left">
+          <h2>License</h2>
+          <p>Copyright (c) 2012 Brennan Moore</p>
+          </div>
+        <div class="column center">
+          <p>
+            Permission is hereby granted, free of charge, to any person obtaining
+            a copy of this software and associated documentation files (the
+            "Software"), to deal in the Software without restriction, including
+            without limitation the rights to use, copy, modify, merge, publish,
+            distribute, sublicense, and/or sell copies of the Software, and to
+            permit persons to whom the Software is furnished to do so, subject to
+            the following conditions:
+          </p>
+          <p>
+            The above copyright notice and this permission notice
+            shall be included in all copies or substantial portions of
+            the Software.
+          </p>
+          <p>
+            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+            EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+            MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+            NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+            LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+            OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+            WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+          </p>
+        </div>
+        <div class="column right">
+          <img height=200 width=200 src="http://placekitten.com/200/200" />
+          <img height=100 width=200 src="http://placekitten.com/200/100" />
+          <img height=150 width=200 src="/http://placekitten.com/200/150" />
+        </div>
+      </div>
+      <div class="feed_item">
+        <div class="column left">
+          <h2>Footer</h2>
+          <p>This project is maintained by <a href="https://github.com/zamiang">zamiang</a></p>
+          <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+        </div>
+        <div class="column center">
+          <img height=200 width=500 src="http://placekitten.com/500/200" />
+          <img height=250 width=500 src="http://placekitten.com/500/250" />
+          <img height=300 width=500 src="http://placekitten.com/500/300" />
+        </div>
+        <div class="column right">
+          small contextual info!
+        </div>
+      </div>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("todo");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
+    <script src="javascripts/jquery.js"></script>
+    <script src="javascripts/jquery.poplockit.min.js"></script>
+    <script>
+$('.wrapper').popLockIt({
+  feedItems      : $('.wrapper > feed_item'),
+  columnSelector : '> .column',
+  margin         : 90
+});
+    </script>
   </body>
 </html>

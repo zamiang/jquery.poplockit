@@ -46,7 +46,7 @@ a small {
 }
 
 .wrapper {
-  width:860px;
+  width:1050px;
   margin:0 auto;
 }
 
@@ -95,13 +95,17 @@ img {
   max-width:100%;
 }
 
-header {
-  width:270px;
-  float:left;
-  position:fixed;
+.column {
+  display: inline-block;
+  vertical-align: top;
 }
 
-header ul {
+.column.left {
+  width:244px;
+  margin-right: 50px
+}
+
+.column.left ul {
   list-style:none;
   height:40px;
   
@@ -121,14 +125,14 @@ header ul {
   width:270px;
 }
 
-header li {
+.column.left li {
   width:89px;
   float:left;
   border-right:1px solid #d2d2d2;
   height:40px;
 }
 
-header ul a {
+.column.left ul a {
   line-height:1;
   font-size:11px;
   color:#999;
@@ -143,27 +147,39 @@ strong {
   font-weight:700;
 }
 
-header ul li + li {
+.feed_item {
+  border-bottom: 1px solid #ccc;
+  padding: 80px 0px;
+}
+
+.feed_item:last-child {
+  border-bottom: 0px solid #ccc;
+}
+.column.left ul li + li {
   width:88px;
   border-left:1px solid #fff;
 }
 
-header ul li + li + li {
+.column.left ul li + li + li {
   border-right:none;
   width:89px;
 }
 
-header ul a strong {
+.column.left ul a strong {
   font-size:14px;
   display:block;
   color:#222;
 }
 
-section {
+.column.center {
   width:500px;
-  float:right;
-  padding-bottom:50px;
+  margin-right: 50px
 }
+
+.column.right {
+  width:200px;
+}
+
 
 small {
   font-size:11px;
