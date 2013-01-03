@@ -1,8 +1,8 @@
 (function() {
 
   beforeEach(function() {
-    $('<div />').attr('id', 'test_container').css('display', 'none').appendTo('body');
-    return this.container = $('#test_container');
+    $("<div id='test-container'></div>").appendTo('body');
+    return window.$el = $('#test_container');
   });
 
   afterEach(function() {

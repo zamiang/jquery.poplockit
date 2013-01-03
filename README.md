@@ -1,4 +1,4 @@
-![build status](https://api.travis-ci.org/zamiang/jquery.popLockIt.png)](http://travis-ci.org/zamiang/jquery.popLockIt)
+[![build status](https://api.travis-ci.org/zamiang/jquery.popLockIt.png)](http://travis-ci.org/zamiang/jquery.popLockIt)
 
 # jQuery.popLockIt
 

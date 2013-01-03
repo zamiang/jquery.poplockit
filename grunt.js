@@ -24,9 +24,9 @@ module.exports = function(grunt) {
             }
         },
         jasmine : {
-            src : 'src/**/*.js',
-            specs : 'specs/**/*_spec.js',
-            helpers : 'specs/helpers/*.js'
+            src : ['lib/jquery.js', 'src/**/*.js'],
+            specs : 'spec/**/*_spec.js',
+            helpers : ['dist/jQuery.popLockIt.js', 'spec/helpers/*.js']
         },
         coffee: {
             dist: {
@@ -83,5 +83,5 @@ module.exports = function(grunt) {
     grunt.registerTask('default', 'coffee concat min jasmine');
 
     // Travis CI task.
-    grunt.registerTask('travis', 'qunit');
+    grunt.registerTask('travis', 'jasmine');
 };
