@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         jasmine : {
             src : ['lib/jquery.js', 'src/**/*.js'],
             specs : 'spec/**/*_spec.js',
-            helpers : ['dist/jQuery.popLockIt.js', 'spec/helpers/*.js']
+            helpers : ['dist/jquery.poplockit.js', 'spec/helpers/*.js']
         },
         coffee: {
             dist: {

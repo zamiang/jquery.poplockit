@@ -10,7 +10,7 @@ See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/jqu
 
 ## Usage
 
-Download the [production version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/lockit.min.js) or the [development version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/lockit.js).
+Download the [production version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.min.js) or the [development version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.js).
 
 Include required Javascripts
 ```html
