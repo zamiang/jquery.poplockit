@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        pkg: '<json:popLockIt.jquery.json>',
+        pkg: '<json:jquery.popLockIt.json>',
         meta: {
             banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
                 '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -23,8 +23,10 @@ module.exports = function(grunt) {
                 dest: 'dist/<%= pkg.name %>.min.js'
             }
         },
-        qunit: {
-            files: ['test/**/*.html']
+        jasmine : {
+            src : 'src/**/*.js',
+            specs : 'specs/**/*_spec.js',
+            helpers : 'specs/helpers/*.js'
         },
         coffee: {
             dist: {
@@ -40,10 +42,14 @@ module.exports = function(grunt) {
                     bare: false,
                     preserve_dirs: true
                 }
+            },
+            spec: {
+                src: ['specs/**/*.coffee'],
+                options: {
+                    bare: false,
+                    preserve_dirs: true
+                }
             }
-        },
-        lint: {
-            files: ['grunt.js', 'src/**/*.js', 'test/**/*.js', 'example/**/*.js']
         },
         watch: {
             files: ['<config:lint.files>', '**/*.coffee'],
@@ -70,10 +76,11 @@ module.exports = function(grunt) {
         uglify: {}
     });
 
+    grunt.loadNpmTasks('grunt-jasmine-runner');
     grunt.loadNpmTasks('grunt-coffee');
 
     // Default task.
-    grunt.registerTask('default', 'coffee qunit concat min');
+    grunt.registerTask('default', 'coffee concat min jasmine');
 
     // Travis CI task.
     grunt.registerTask('travis', 'qunit');

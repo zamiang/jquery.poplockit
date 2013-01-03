@@ -1,4 +1,3 @@
-#
 # PopLockIt.js example code
 #
 # Generates html to demonstrate what popLockIt.js does
@@ -19,7 +18,8 @@ App =
     @columnWidth = @getColumnWidth()
     $('body')
       .html(@generateFeedHtml())
-      .find('> ul').popLockIt
+      .find('> ul')
+      .popLockIt
         feedItems      : $('body > ul')
         columnSelector : '> ul'
         margin         : 90

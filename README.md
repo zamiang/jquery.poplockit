@@ -1,4 +1,4 @@
-[![build status](https://api.travis-ci.org/zamiang/jquery.poplockit.png)](http://travis-ci.org/zamiang/jquery.poplockit)
+![build status](https://api.travis-ci.org/zamiang/jquery.popLockIt.png)](http://travis-ci.org/zamiang/jquery.popLockIt)
 
 # jQuery.popLockIt
 
@@ -64,7 +64,7 @@ returns feedItems and their Columns to their default positions and unbinds all e
 
 Recomputes height / top / bottom etc of each feed item and its columns. Run if the size of any of your feed items has changed
 
-### onScroll()p
+### onScroll()
 
 Manually run the onScroll event. Recommend running this if you have hidden the feed and are now re-showing it.
 

@@ -1,3 +1,7 @@
+/*! jQuery.popLockIt - v0.1.0 - 2013-01-03
+* https://github.com/zamiang/jquery.popLockIt
+* Copyright (c) 2013 Brennan Moore; Licensed MIT */
+
 (function() {
   var $, Base, Column, Feed, FeedItem, methods,
     __hasProp = {}.hasOwnProperty,
@@ -95,19 +99,21 @@
     FeedItem.prototype.requires = ['columnSelector'];
 
     function FeedItem($el, settings) {
-      var height;
+      var height, _ref;
       FeedItem.__super__.constructor.call(this, $el, settings);
       this.$el = $el;
       this.settings = settings;
       this.setDimensions();
       this.$columns = this.$el.find(settings.columnSelector);
       height = this.height;
-      this.columns = this.$columns.map(function() {
-        return new Column($(this), {
-          height: height,
-          margin: settings.margin
+      if (((_ref = this.$columns) != null ? _ref.length : void 0) > 0) {
+        this.columns = this.$columns.map(function() {
+          return new Column($(this), {
+            height: height,
+            margin: settings.margin
+          });
         });
-      });
+      }
       this;
 
     }

@@ -73,9 +73,10 @@ class FeedItem extends Base
     @$columns = @$el.find(settings.columnSelector)
 
     height = @height
-    @columns = @$columns.map -> new Column $(this),
-      height: height
-      margin: settings.margin
+    if @$columns?.length > 0
+      @columns = @$columns.map -> new Column $(this),
+        height: height
+        margin: settings.margin
     @
 
   setDimensions: ->
