@@ -33,7 +33,7 @@
           for (var _i = 1, _ref = _this.defaults.numberColumns; 1 <= _ref ? _i <= _ref : _i >= _ref; 1 <= _ref ? _i++ : _i--){ _results.push(_i); }
           return _results;
         }).apply(this).map(function() {
-          return _this.generateKittensHtml(2);
+          return _this.generateKittensHtml(Math.ceil(1 + (Math.random() * 6)));
         }).join('') + "</ul>";
       }).join('');
     },
@@ -46,7 +46,7 @@
         return _results;
       }).apply(this).map(function() {
         var height, width;
-        height = Math.ceil((50 + (Math.random() * 600)) / 10) * 10;
+        height = Math.ceil((50 + (Math.random() * 300)) / 10) * 10;
         width = _this.columnWidth - _this.defaults.columnPadding;
         return "<li style='width: " + width + "px'><img height='" + height + "' width='" + width + "' src='http://placekitten.com/" + width + "/" + height + "'></li>";
       }).join('') + "</ul>";

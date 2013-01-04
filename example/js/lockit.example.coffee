@@ -29,13 +29,14 @@ App =
   generateFeedHtml: ->
     [1..@defaults.numberItems].map =>
       "<ul>" + [1..@defaults.numberColumns].map =>
-        @generateKittensHtml 2
+        @generateKittensHtml Math.ceil(1 + (Math.random() * 6))
       .join('') + "</ul>"
     .join('')
 
+
   generateKittensHtml: (num) ->
     "<ul style='width: #{@columnWidth}px'>" + [1..num].map =>
-      height = Math.ceil((50 + (Math.random() * 600))/ 10) * 10
+      height = Math.ceil((50 + (Math.random() * 300))/ 10) * 10
       width = @columnWidth - @defaults.columnPadding
       "<li style='width: #{width}px'><img height='#{height}' width='#{width}' src='http://placekitten.com/#{width}/#{height}'></li>"
     .join('') + "</ul>"

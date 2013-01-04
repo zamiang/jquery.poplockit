@@ -18,7 +18,7 @@ Include required Javascripts
 <script src="dist/poplockit.min.js"></script>
 ```
 
-Create html like this:
+Create html like this
 ```html
   <div id="feed">
     <article>
@@ -56,6 +56,6 @@ Contributions and pull requests are very welcome. Please follow these guidelines
 
 #### Submitting pull requests
 
-1. Add tests for the change you want to make. Run `grunt test` to see if tests fail.
+1. Add tests for the change you want to make. Run `grunt jasmine` to see if tests fail.
 1. Run `grunt` to compile new dist and make sure nothing is broken
 1. Submit a Pull Request using GitHub.
