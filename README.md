@@ -6,11 +6,9 @@ A jQuery plugin that does...
 
 For documentation, usage and examples please see http://zamiang.github.com/jquery.poplockit/
 
-## Example
-
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
-## Usage
+### Usage
 
 Download the [production version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.min.js) or the [development version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.js).
 
@@ -42,44 +40,11 @@ $('#feed').popLockIt({
 });
 ```
 
-## Options
-
-### feedItems { jQuery Object }
-
-jQuery object for you feed items.
-
-### columnSelector { selector String }
-
-Selector string to get the columns for your feed items relative to a feed item element. It is used in jQuery.popLockIt like so: ```javascript $feedItem.find(columnSelector);```
-
-### margin { number }
-
-*todo* - investigate figuring this out from the html
-
-## Methods
-
-### destroy
-
-returns feedItems and their Columns to their default positions and unbinds all events.
-
-### recompute()
-
-Recomputes height / top / bottom etc of each feed item and its columns. Run if the size of any of your feed items has changed
-
-### onScroll()
-
-Manually run the onScroll event. Recommend running this if you have hidden the feed and are now re-showing it.
-
-### addFeedItems( { jQuery Object } )
-
-Add items to the feed. Takes a jQuery object containing the new feed items.
-
-
-## Contributing
+### Contributing
 
 Contributions and pull requests are very welcome. Please follow these guidelines when submitting new code.
 
-### Modifying the code
+#### Modifying the code
 1. Fork and clone the repo.
 1. If needed: `npm install -g grunt` for [Grunt](https://github.com/gruntjs/grunt)
 1. If needed: `brew install phantomjs` for [PhantomJS](http://phantomjs.org/download.html)
@@ -89,7 +54,7 @@ Contributions and pull requests are very welcome. Please follow these guidelines
 1. Make all changes in Coffeescript files, not JavaScript files.
 1. Please don't edit files in the `dist` subdirectory as they are generated via grunt. You'll find source code in the `src` subdirectory!
 
-### Submitting pull requests
+#### Submitting pull requests
 
 1. Add tests for the change you want to make. Run `grunt test` to see if tests fail.
 1. Run `grunt` to compile new dist and make sure nothing is broken
