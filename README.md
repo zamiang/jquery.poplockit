@@ -8,7 +8,7 @@ For documentation, usage and examples please see http://zamiang.github.com/jquer
 
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
-### Usage
+## Usage
 
 Download the [production version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.min.js) or the [development version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.js).
 
@@ -40,11 +40,11 @@ $('#feed').popLockIt({
 });
 ```
 
-### Contributing
+## Contributing
 
 Contributions and pull requests are very welcome. Please follow these guidelines when submitting new code.
 
-#### Modifying the code
+### Modifying the code
 1. Fork and clone the repo.
 1. If needed: `npm install -g grunt` for [Grunt](https://github.com/gruntjs/grunt)
 1. If needed: `brew install phantomjs` for [PhantomJS](http://phantomjs.org/download.html)
@@ -52,9 +52,8 @@ Contributions and pull requests are very welcome. Please follow these guidelines
 1. Run `grunt` (compiles coffeescripts and runs tests)
 1. Run `grunt watch` while editing files to auto-compile coffeescripts and run tests
 1. Make all changes in Coffeescript files, not JavaScript files.
-1. Please don't edit files in the `dist` subdirectory as they are generated via grunt. You'll find source code in the `src` subdirectory!
 
-#### Submitting pull requests
+### Submitting pull requests
 
 1. Add tests for the change you want to make. Run `grunt jasmine` to see if tests fail.
 1. Run `grunt` to compile new dist and make sure nothing is broken
