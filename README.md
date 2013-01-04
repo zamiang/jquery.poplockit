@@ -4,6 +4,8 @@
 
 A jQuery plugin that does...
 
+For documentation, usage and examples please see http://zamiang.github.com/jquery.poplockit/
+
 ## Example
 
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
@@ -75,7 +77,7 @@ Add items to the feed. Takes a jQuery object containing the new feed items.
 
 ## Contributing
 
-Please don't edit files in the `dist` subdirectory as they are generated via grunt. You'll find source code in the `src` subdirectory!
+Contributions and pull requests are very welcome. Please follow these guidelines when submitting new code.
 
 ### Modifying the code
 1. Fork and clone the repo.
@@ -84,34 +86,11 @@ Please don't edit files in the `dist` subdirectory as they are generated via gru
 1. Run `npm install` to install dependencies
 1. Run `grunt` (compiles coffeescripts and runs tests)
 1. Run `grunt watch` while editing files to auto-compile coffeescripts and run tests
+1. Make all changes in Coffeescript files, not JavaScript files.
+1. Please don't edit files in the `dist` subdirectory as they are generated via grunt. You'll find source code in the `src` subdirectory!
 
 ### Submitting pull requests
 
-1. Add tests for the change you want to make. Run `grunt` to see if tests fail.
-1. Run `grunt` to make sure nothing is broken
-1. Push to your fork and submit a pull request.
-
-## License
-
-Copyright (c) 2012 Brennan Moore
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+1. Add tests for the change you want to make. Run `grunt test` to see if tests fail.
+1. Run `grunt` to compile new dist and make sure nothing is broken
+1. Submit a Pull Request using GitHub.
