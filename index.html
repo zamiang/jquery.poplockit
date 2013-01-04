@@ -67,26 +67,67 @@
       </div>
       <div class="feed_item">
         <div class="column left">
+          <h2>Options</h2>
+          <p>Options you can pass in when initializing the plugin</p>
+        </div>
+        <div class="column center">
+          <h3>feedItems { jQuery Object }</h3>
+          <p>jQuery object for you feed items.</p>
+          <h3>columnSelector { selector String }</h3>
+          <p>Selector string to get the columns for your feed items relative to a feed item element. It is used in jQuery.popLockIt like so: ```javascript $feedItem.find(columnSelector);```</p>
+          <h3>margin { number }</h3>
+          <p>*todo* - investigate figuring this out from the html</p>
+        </div>
+        <div class="column right">
+          <img height=200 width=200 src="http://placekitten.com/200/200" />
+          <img height=100 width=200 src="http://placekitten.com/200/100" />
+          <img height=150 width=200 src="http://placekitten.com/200/150" />
+        </div>
+      </div>
+      <div class="feed_item">
+        <div class="column left">
+          <h2>Methods</h2>
+          <p>Options you can call on an element after calling popLockIt on that element</p>
+        </div>
+        <div class="column center">
+          <h3>destroy()</h3>
+          <p>returns feedItems and their Columns to their default positions and unbinds all events.</p>
+          <h3>recompute()</h3>
+          <p>Recomputes height / top / bottom etc of each feed item and its columns. Run if the size of any of your feed items has changed</p>
+          <h3>onScroll()</h3>
+          <p>Manually run the onScroll event. Recommend running this if you have hidden the feed and are now re-showing it.</p>
+          <h3>addFeedItems( { jQuery Object } )</h3>
+          <p>Add items to the feed. Takes a jQuery object containing the new feed items.</p>
+        </div>
+        <div class="column right">
+          <img height=200 width=200 src="http://placekitten.com/200/200" />
+          <img height=100 width=200 src="http://placekitten.com/200/100" />
+          <img height=150 width=200 src="http://placekitten.com/200/150" />
+        </div>
+      </div>
+      <div class="feed_item">
+        <div class="column left">
           <h2>Contributing</h2>
-          <p>Please don't edit files in the dist subdirectory as they
-          are generated via grunt. You'll find source code in the src
-          subdirectory!</p>
+          <p>Contributions and pull requests are very welcome. Please follow these guidelines when submitting new code.</p>
           </div>
         <div class="column center">
           <h3>Modifying the code</h3>
           <ol>
             <li>Fork and clone the repo.</li>
-            <li>If needed: npm install -g grunt for Grunt</li>
-            <li>If needed: brew install phantomjs for PhantomJS</li>
-            <li>Run npm install to install dependencies</li>
-            <li>Run grunt (compiles coffeescripts and runs tests)</li>
-            <li>Run grunt watch while editing files to auto-compile coffeescripts and run tests</li>
+            <li>If needed: <code>npm install -g grunt</code> for <a href="https://github.com/gruntjs/grunt">Grunt</a>
+            </li>
+            <li>If needed: <code>brew install phantomjs</code> for <a href="http://phantomjs.org/download.html">PhantomJS</a>
+            </li>
+            <li>Run <code>npm install</code> to install dependencies</li>
+            <li>Run <code>grunt</code> (compiles coffeescripts and runs tests)</li>
+            <li>Run <code>grunt watch</code> while editing files to auto-compile coffeescripts and run tests</li>
+            <li>Make all changes in Coffeescript files, not JavaScript files.</li>
           </ol>
           <h3>Submitting pull requests</h3>
           <ol>
-            <li>Add tests for the change you want to make. Run grunt to see if tests fail.</li>
-            <li>Run grunt to make sure nothing is broken.</li>
-            <li>Push to your fork and submit a pull request.</li>
+            <li>Add tests for the change you want to make. Run <code>grunt jasmine</code> to see if tests fail.</li>
+            <li>Run <code>grunt</code> to compile new dist and make sure nothing is broken</li>
+            <li>Submit a Pull Request using GitHub.</li>
           </ol>
         </div>
         <div class="column right">
@@ -95,6 +136,7 @@
           <img height=150 width=200 src="http://placekitten.com/200/150" />
         </div>
       </div>
+
       <div class="feed_item">
         <div class="column left">
           <h2>License</h2>
