@@ -36,6 +36,12 @@
       super($el, settings)
       @$el = $el
       @settings = settings
+
+      # defaults
+      @marginTop = 0
+      @marginBottom = 0
+      @marginLeft = 0
+
       @setDimensions settings.height, settings.marginTop, settings.marginBottom, settings.marginLeft
       @
 

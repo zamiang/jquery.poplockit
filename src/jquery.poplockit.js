@@ -36,6 +36,9 @@
         Column.__super__.constructor.call(this, $el, settings);
         this.$el = $el;
         this.settings = settings;
+        this.marginTop = 0;
+        this.marginBottom = 0;
+        this.marginLeft = 0;
         this.setDimensions(settings.height, settings.marginTop, settings.marginBottom, settings.marginLeft);
         this;
 
