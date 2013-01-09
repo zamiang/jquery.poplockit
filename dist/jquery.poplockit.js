@@ -134,9 +134,6 @@
         this.$el = $el;
         this.settings = settings;
         this.setDimensions();
-        this.$columns = this.$el.find(settings.columnSelector);
-        this.marginTop = Number(this.$el.css('padding-top').replace('px', ''));
-        this.marginBottom = Number(this.$el.css('padding-bottom').replace('px', ''));
         this.createColumns();
         this;
 
@@ -144,6 +141,7 @@
 
       FeedItem.prototype.createColumns = function() {
         var height, left, marginBottom, marginTop, _ref;
+        this.$columns = this.$el.find(this.settings.columnSelector);
         height = this.height;
         left = this.left;
         marginTop = this.marginTop;
@@ -162,6 +160,8 @@
 
       FeedItem.prototype.setDimensions = function() {
         var height;
+        this.marginTop = Number(this.$el.css('padding-top').replace('px', ''));
+        this.marginBottom = Number(this.$el.css('padding-bottom').replace('px', ''));
         height = this.$el.css('height');
         this.height = Number(height.replace('px', ""));
         this.$el.css({
