@@ -14,227 +14,259 @@
 # ---- Column
 # ...
 
-$ = jQuery
-  
-class Base
+(($, window, document) ->
 
-  requires: []
+  pluginName = "popLockIt"
 
-  constructor: ($el, settings) ->
-    for require in @requires
-      throw "You must pass #{require}" unless settings[require]?
+  class Base
 
+    requires: []
 
-class Column extends Base
-
-  requires: ['height', 'margin']
-
-  constructor: ($el, settings) ->
-    super($el, settings)
-    @$el = $el
-    @settings = settings
-    @height = settings.height
-    @setDimensions()
-    @
-
-  setDimensions: (height) ->
-    @height = height if height
-    @top = @$el.offset().top - @settings.margin
-    @left = @$el.offset().left
-    @bottom = @top + @height - @$el.outerHeight(true)
-
-  setPosition: (pos = 'absolute', direction = 'north') ->
-    @$el.css
-      position : pos
-      top      : if direction == 'north' then @settings.margin else 'auto'
-      bottom   : if direction == 'south' then @settings.margin else 'auto'
-      left     : @left
-
-  onScroll: (scrollTop, viewportHeight) ->
-    return if viewportHeight >= @height
-    return @setPosition('fixed') if scrollTop >= @top and scrollTop < @bottom
-    return @setPosition('absolute', 'north') if scrollTop < @top
-    return @setPosition('absolute', 'south') if scrollTop >= @bottom
-
-  # return to default state on destroy
-  destroy: -> @setPosition()
+    constructor: ($el, settings) ->
+      for require in @requires
+        throw "You must pass #{require}" unless settings[require]?
 
 
-class FeedItem extends Base
+  class Column extends Base
 
-  requires: ['columnSelector']
+    requires: ['height', 'marginTop', 'marginLeft', 'marginBottom']
+    cssProperties: ['position', 'top', 'bottom', 'left']
 
-  constructor: ($el, settings) ->
-    super($el, settings)
-    @$el = $el
-    @settings = settings
-    @setDimensions()
-    
-    @$columns = @$el.find(settings.columnSelector)
+    constructor: ($el, settings) ->
+      super($el, settings)
+      @$el = $el
+      @settings = settings
+      @setDimensions settings.height, settings.marginTop, settings.marginBottom, settings.marginLeft
+      @
 
-    height = @height
-    if @$columns?.length > 0
-      @columns = @$columns.map -> new Column $(this),
-        height: height
-        margin: settings.margin
-    @
+    setDimensions: (parentHeight, marginTop, marginBottom, marginLeft) ->
+      @parentHeight = parentHeight if parentHeight
+      @marginTop = marginTop if marginTop
+      @marginBottom = marginBottom if marginBottom
+      @marginLeft = marginLeft if marginLeft
 
-  setDimensions: ->
-    @height = @$el.outerHeight(true)
-    @top = @$el.offset().top - @settings.margin
-    @bottom = @top + @height
-    @$el.css
-      height: "#{@height}px"
-      position: "relative"
+      @height = Number(@$el.css('height').replace('px',""))
+      @top = @$el.offset().top - @marginTop
+      @left = @$el.offset().left
 
-  onScroll: (scrollTop, viewportHeight) ->
-    # only trigger onscroll for columns if we are in the feeditem
-    if scrollTop >= @top and scrollTop < @bottom
-      @active = true
-      column.onScroll(scrollTop, viewportHeight) for column in @columns
-    else if @active
-      column.onScroll(scrollTop, viewportHeight) for column in @columns
-      @active = false
+      @bottom = @top + @parentHeight - @height - (@marginBottom * 2)
 
-  destroy: ->
-    column.destroy() for column in @columns
+      @top = 1 if @top < 1
 
+    setPosition: (pos = 'absolute', direction = 'north') ->
+      newState =
+        position : pos
+        top      : if direction == 'north' then @marginTop else 'auto'
+        bottom   : if direction == 'south' then @marginBottom else 'auto'
+        left     : if pos == 'fixed' then @left else @left - (@marginLeft || 0)
 
-class Feed extends Base
+      unless @oldState
+        @$el.css newState
+        return @oldState = newState
 
-  defaults: 
-    active: true
-    rendered: false
+      diff = {}
+      changed = false
+      for prop in @cssProperties
+        if newState[prop] != @oldState[prop]
+          diff[prop] = newState[prop]
+          changed = true
 
-  feedItems: []
-  requires: ['feedItems']
+      if changed
+        @$el.css diff
+        @oldState = newState
 
-  constructor: ($el, settings) ->
-    super($el, settings)
-    throw "PopLockIt must be called on an element" unless $el.length > 0
+    onScroll: (scrollTop, viewportHeight, preventFixed) ->
+      return @setPosition('fixed') if !preventFixed and scrollTop >= @top and scrollTop < @bottom
+      return @setPosition('absolute', 'north') if scrollTop < @top
+      return @setPosition('absolute', 'south') if scrollTop >= @bottom
 
-    @$el = $el
-    @$window = $(window)
-    @detectiOS()
-    @initRequestAnimationFrame()
-
-    @settings = $.extend @defaults, settings
-
-    @addFeedIitems @settings.feedItems
-
-    @bindWindowEvents()
-
-  addFeedIitems: ($feedItems) ->
-    @feedItems = @feedItems.concat(new FeedItem($($item), @settings) for $item in $feedItems)
-
-  onScroll: ->
-    return unless @settings.active
-    scrollTop = @$window.scrollTop()
-
-    if scrollTop == @previousScrollTop
-      return window.requestAnimationFrame (=> @onScroll())
-
-    @scrollingDown = @previousScrollTop < scrollTop
-    for item in @feedItems
-      item.onScroll scrollTop, @height
-
-    @previousScrollTop = scrollTop
-
-    window.requestAnimationFrame (=> @onScroll())
-
-  onResize: =>
-    for item in @feedItems
-      item.onScroll @previousScrollTop, @$window.height()
-    @height = @$window.outerHeight(true)
-
-  bindWindowEvents: ->
-    window.requestAnimationFrame (=> @onScroll())
-    unless @IS_IOS
-      @$window.bind 'resize.feedItem', @debounce(@onResize, 100)
-
-  unbindWindowEvents: -> @$window.unbind('.feedItem')
-
-  destroy: ->
-    @settings.rendered = false
-    @settings.active = false
-    @feedItems.destroy() for item in @items
-    @unbindWindowEvents()
+    # return to default state on destroy
+    destroy: -> @setPosition()
 
 
-  ##
-  ## Helpers 
-  # from underscore.js
-  debounce: (func, wait) ->
-    timeout = 0
-    return ->
-      args = arguments
-      throttler = =>
-        timeout = null
-        func args
+  class FeedItem extends Base
 
-      clearTimeout timeout
-      timeout = setTimeout(throttler, wait)
+    requires: ['columnSelector']
 
-  # Identify iOS devices and bind on resize instead of setinterval
-  #
-  # iOS has a unique set of scroll issues
-  # - does not update scrollTop until touchEnd event is fired (does not update while scrolling -- only when done)
-  # - resize event fires when document height or width change (such as when items are added to the dom)
-  detectiOS: ->
-    uagent = navigator.userAgent.toLowerCase()
-    @IS_IOS = uagent.match(/(iPhone|iPod|iPad)/i)?
+    constructor: ($el, settings) ->
+      super($el, settings)
+      @$el = $el
 
-  # http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-  # requestAnimationFrame polyfill by Erik Moller
-  # fixes from Paul Irish and Tino Zijdel
-  #
-  # todo: put this on @
-  initRequestAnimationFrame: ->
-    return if window.requestAnimationFrame
+      @settings = settings
+      @setDimensions()
+      
+      @$columns = @$el.find(settings.columnSelector)
 
-    lastTime = 0
-    vendors = ['ms', 'moz', 'webkit', 'o']
-    for vendor in vendors when not window.requestAnimationFrame
-      window.requestAnimationFrame = window["#{vendor}RequestAnimationFrame"]
+      height = @height
+      #console.log @height
+      left = @left
+      if @$columns?.length > 0
+        @columns = @$columns.map -> new Column $(this),
+          height       : height
+          marginTop    : settings.marginTop
+          marginBottom : settings.marginBottom
+          marginLeft   : left
+      @
 
-    unless window.requestAnimationFrame
-      window.requestAnimationFrame = (callback, element) ->
-        currTime = new Date().getTime()
-        timeToCall = Math.max(0, 16 - (currTime - lastTime))
-        id = window.setTimeout((-> callback(currTime + timeToCall)), timeToCall)
-        lastTime = currTime + timeToCall
-        id
+    setDimensions: ->
+      height = @$el.css('height')
+      @height = Number(height.replace('px',"")) # + (@settings.margin / 2)
+      @$el.css
+        height: @height
+        position: "relative"
 
+      @left = @$el.offset().left
+      @top = @$el.offset().top - @settings.marginTop
+      @bottom = @top + @height
 
-methods =
+    onScroll: (scrollTop, viewportHeight) ->
+      # only trigger onscroll for columns if we are in the feeditem
+      if viewportHeight >= @height
+        @active = false
+        return
+      else if scrollTop >= @top and scrollTop < @bottom
+        @active = true
+        column.onScroll(scrollTop, viewportHeight) for column in @columns
+      else if @active
+        column.onScroll(scrollTop, viewportHeight, true) for column in @columns
+        @active = false
 
-  initialize: (settings) ->
-    throw "You must pass settings" unless settings?
-    @feed = new Feed($(@), settings)
-    @
-
-  destroy: ->
-    $(window).unbind 'resize.popLockIt'
-    @feed.destroy()
-
-  # recomputes height / top / bottom etc of each feed item and its columns
-  recompute: ->
-    for feedItem in @feed.feedItems
-      feedItem.setDimensions()
-      for column in feedItem.columns
-        colum.setDimensions feedItem.height
-
-  onScroll: -> @feed.onScroll()
-
-  addFeedItems: ($feedItems) ->
-    throw "You must pass $feedItems" unless $feedItems? and $feedItems.length
-    @feed.addFeedIitems $feedItems
+    destroy: ->
+      column.destroy() for column in @columns
 
 
-$.fn.popLockIt = (method) ->
-  if methods[method]?
-    methods[method].apply @, Array::slice.call(arguments, 1)
-  else if typeof method is "object" or not method?
-    methods.initialize.apply @, arguments
-  else
-    $.error "Method #{method} does not exist on jQuery.popLockIt"
+  class Feed extends Base
+
+    feedItems: []
+    requires: ['feedItems']
+
+    defaults:
+      active: true
+      rendered: false
+
+    constructor: (el, settings) ->
+      @$el = $(el)
+      super(@$el, settings)
+      throw "PopLockIt must be called on an element" unless @$el?.length > 0
+      throw "You must pass settings" unless settings?
+
+      @$window = $(window)
+      @detectiOS()
+      @initRequestAnimationFrame()
+      @setViewportHeight()
+
+      @$el.css
+        'box-sizing': 'border-box'
+        overflow    : 'hidden'
+
+      @settings = $.extend @defaults, settings
+
+      @settings.marginTop = Number(@$el.css('padding-top').replace('px', ''))
+      @settings.marginBottom = Number(@$el.css('padding-bottom').replace('px', ''))
+
+      @addFeedItems @settings.feedItems
+
+      @bindWindowEvents()
+      @
+
+    onScroll: ->
+      return unless @settings.active
+      scrollTop = @$window.scrollTop()
+
+      if scrollTop == @previousScrollTop
+        return window.requestAnimationFrame (=> @onScroll())
+
+      for item in @feedItems
+        item.onScroll scrollTop, @viewportHeight
+
+      @previousScrollTop = scrollTop
+
+      window.requestAnimationFrame (=> @onScroll())
+
+    # recomputes height / top / bottom etc of each feed item and its columns
+    recompute: ->
+      for feedItem in @feedItems
+        feedItem.setDimensions()
+        for column in feedItem.columns
+          column.setDimensions feedItem.height, feedItem.settings.marginTop, feedItem.settings.marginBottom, feedItem.left
+
+    addFeedItems: ($feedItems) ->
+      throw "You must pass $feedItems" unless $feedItems? and $feedItems.length
+      @feedItems = @feedItems.concat(new FeedItem($($item), @settings) for $item in $feedItems)
+
+    onResize: =>
+      @setViewportHeight()
+      for item in @feedItems
+        item.onScroll @previousScrollTop, @viewportHeight
+
+    setViewportHeight: -> @viewportHeight = @$window.outerHeight(true)
+
+    bindWindowEvents: ->
+      window.requestAnimationFrame (=> @onScroll())
+      unless @IS_IOS
+        @$window.bind 'resize.feedItem', @debounce(@onResize, 100)
+
+    unbindWindowEvents: -> @$window.unbind('.feedItem')
+
+    destroy: ->
+      $(window).unbind 'resize.popLockIt'
+      @settings.rendered = false
+      @settings.active = false
+      @feedItems.destroy() for item in @items
+      @unbindWindowEvents()
+
+
+    ##
+    ## Helpers 
+    # from underscore.js
+    debounce: (func, wait) ->
+      timeout = 0
+      return ->
+        args = arguments
+        throttler = =>
+          timeout = null
+          func args
+
+        clearTimeout timeout
+        timeout = setTimeout(throttler, wait)
+
+    # Identify iOS devices and bind on resize instead of setinterval
+    #
+    # iOS has a unique set of scroll issues
+    # - does not update scrollTop until touchEnd event is fired (does not update while scrolling -- only when done)
+    # - resize event fires when document height or width change (such as when items are added to the dom)
+    detectiOS: ->
+      uagent = navigator.userAgent.toLowerCase()
+      @IS_IOS = uagent.match(/(iPhone|iPod|iPad)/i)?
+
+    # http://paulirish.com/2011/requestanimationframe-for-smart-animating/
+    # requestAnimationFrame polyfill by Erik Moller
+    # fixes from Paul Irish and Tino Zijdel
+    #
+    # todo: put this on @
+    initRequestAnimationFrame: ->
+      return if window.requestAnimationFrame
+
+      lastTime = 0
+      vendors = ['ms', 'moz', 'webkit', 'o']
+      for vendor in vendors when not window.requestAnimationFrame
+        window.requestAnimationFrame = window["#{vendor}RequestAnimationFrame"]
+
+      unless window.requestAnimationFrame
+        window.requestAnimationFrame = (callback, element) ->
+          currTime = new Date().getTime()
+          timeToCall = Math.max(0, 16 - (currTime - lastTime))
+          id = window.setTimeout((-> callback(currTime + timeToCall)), timeToCall)
+          lastTime = currTime + timeToCall
+          id
+
+  # A really lightweight plugin wrapper around the constructor,
+  # preventing against multiple instantiations
+  $.fn[pluginName] = (options) ->
+    if !$.data(@, "plugin_#{pluginName}")
+      throw "You must pass settings" unless options?
+      $.data(@, "plugin_#{pluginName}", new Feed(@, options))
+    else if $.data(@, "plugin_#{pluginName}")[options]?
+      $.data(@, "plugin_#{pluginName}")[options] Array::slice.call(arguments, 1)
+
+)(jQuery, window, document)

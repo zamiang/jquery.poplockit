@@ -16,13 +16,13 @@ App =
 
   initialize: ->
     @columnWidth = @getColumnWidth()
+
     $('body')
       .html(@generateFeedHtml())
       .find('> ul')
       .popLockIt
         feedItems      : $('body > ul')
         columnSelector : '> ul'
-        margin         : 90
 
   getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns / 10) * 10 - 40
 
