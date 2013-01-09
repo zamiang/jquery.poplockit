@@ -97,32 +97,40 @@
     constructor: ($el, settings) ->
       super($el, settings)
       @$el = $el
-
       @settings = settings
+
       @setDimensions()
-      
-      @$columns = @$el.find(settings.columnSelector)
+      @createColumns()
+      @
+
+    createColumns: ->
+      @$columns = @$el.find @settings.columnSelector
 
       height = @height
-      #console.log @height
       left = @left
+      marginTop = @marginTop
+      marginBottom = @marginBottom
+
       if @$columns?.length > 0
         @columns = @$columns.map -> new Column $(this),
           height       : height
-          marginTop    : settings.marginTop
-          marginBottom : settings.marginBottom
+          marginTop    : marginTop
+          marginBottom : marginBottom
           marginLeft   : left
-      @
 
     setDimensions: ->
+      # accomodate for when feed items have different padding
+      @marginTop = Number(@$el.css('padding-top').replace('px', ''))
+      @marginBottom = Number(@$el.css('padding-bottom').replace('px', ''))
+
       height = @$el.css('height')
-      @height = Number(height.replace('px',"")) # + (@settings.margin / 2)
+      @height = Number(height.replace('px',""))
       @$el.css
         height: @height
         position: "relative"
 
       @left = @$el.offset().left
-      @top = @$el.offset().top - @settings.marginTop
+      @top = @$el.offset().top - @marginTop
       @bottom = @top + @height
 
     onScroll: (scrollTop, viewportHeight) ->
@@ -166,9 +174,6 @@
         overflow    : 'hidden'
 
       @settings = $.extend @defaults, settings
-
-      @settings.marginTop = Number(@$el.css('padding-top').replace('px', ''))
-      @settings.marginBottom = Number(@$el.css('padding-bottom').replace('px', ''))
 
       @addFeedItems @settings.feedItems
 

@@ -130,27 +130,35 @@
       FeedItem.prototype.requires = ['columnSelector'];
 
       function FeedItem($el, settings) {
-        var height, left, _ref;
         FeedItem.__super__.constructor.call(this, $el, settings);
         this.$el = $el;
         this.settings = settings;
         this.setDimensions();
         this.$columns = this.$el.find(settings.columnSelector);
+        this.marginTop = Number(this.$el.css('padding-top').replace('px', ''));
+        this.marginBottom = Number(this.$el.css('padding-bottom').replace('px', ''));
+        this.createColumns();
+        this;
+
+      }
+
+      FeedItem.prototype.createColumns = function() {
+        var height, left, marginBottom, marginTop, _ref;
         height = this.height;
         left = this.left;
+        marginTop = this.marginTop;
+        marginBottom = this.marginBottom;
         if (((_ref = this.$columns) != null ? _ref.length : void 0) > 0) {
-          this.columns = this.$columns.map(function() {
+          return this.columns = this.$columns.map(function() {
             return new Column($(this), {
               height: height,
-              marginTop: settings.marginTop,
-              marginBottom: settings.marginBottom,
+              marginTop: marginTop,
+              marginBottom: marginBottom,
               marginLeft: left
             });
           });
         }
-        this;
-
-      }
+      };
 
       FeedItem.prototype.setDimensions = function() {
         var height;
@@ -161,7 +169,7 @@
           position: "relative"
         });
         this.left = this.$el.offset().left;
-        this.top = this.$el.offset().top - this.settings.marginTop;
+        this.top = this.$el.offset().top - this.marginTop;
         return this.bottom = this.top + this.height;
       };
 
@@ -236,8 +244,6 @@
           overflow: 'hidden'
         });
         this.settings = $.extend(this.defaults, settings);
-        this.settings.marginTop = Number(this.$el.css('padding-top').replace('px', ''));
-        this.settings.marginBottom = Number(this.$el.css('padding-bottom').replace('px', ''));
         this.addFeedItems(this.settings.feedItems);
         this.bindWindowEvents();
         this;
