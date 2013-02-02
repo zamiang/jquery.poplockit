@@ -13,20 +13,21 @@
  * - minimize required css for configuring lockit.js
 */
 
-body {
+body, .container {
   margin: 0px;
   padding: 0px;
 }
 
-body > ul {
+body .container > ul {
   border-bottom: 1px solid #ccc;
   list-style: none;
   margin: 0px; 
   padding: 80px 40px;
   text-align: center;
+  position: relative;
 }
 
-body > ul > ul {
+body .container  > ul > ul {
   display: inline-block;
   vertical-align: top;
   list-style: none;
@@ -36,21 +37,21 @@ body > ul > ul {
   margin-right: auto;
 }
 
-body > ul > ul > li {
+body .container  > ul > ul > li {
   margin: 20px;
   overflow: hidden;
   display: block;
 }
 
-body > ul > ul > li:first-child {
+body .container  > ul > ul > li:first-child {
   margin-top: 0px;
 }
 
-body > ul > ul > li:last-child {
+body .container  > ul > ul > li:last-child {
   margin-bottom: 0px;
 }
 
-body > ul > ul > li > img {
+body .container > ul > ul > li > img {
   margin: 0px;
   padding: 0px;
   display: block;

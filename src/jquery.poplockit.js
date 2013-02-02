@@ -360,6 +360,7 @@
           overflow: 'hidden'
         });
         this.addFeedItems(this.settings.feedItems);
+        this.requestAnimationFrame();
         this;
 
       }

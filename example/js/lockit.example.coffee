@@ -18,10 +18,10 @@ App =
     @columnWidth = @getColumnWidth()
 
     $('body')
-      .html(@generateFeedHtml())
-      .find('> ul')
+      .html("<div class='container'>#{@generateFeedHtml()}</div>")
+      .find('.container')
       .popLockIt
-        feedItems      : $('body > ul')
+        feedItems      : $('body .container > ul')
         columnSelector : '> ul'
 
   getColumnWidth: -> Math.floor($('body').width() / @defaults.numberColumns / 10) * 10 - 40

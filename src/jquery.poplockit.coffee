@@ -219,6 +219,7 @@
         overflow    : 'hidden'
 
       @addFeedItems @settings.feedItems
+      @requestAnimationFrame()
       @
 
     onScroll: ->

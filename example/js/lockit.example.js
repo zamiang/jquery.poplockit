@@ -10,8 +10,8 @@
     },
     initialize: function() {
       this.columnWidth = this.getColumnWidth();
-      return $('body').html(this.generateFeedHtml()).find('> ul').popLockIt({
-        feedItems: $('body > ul'),
+      return $('body').html("<div class='container'>" + (this.generateFeedHtml()) + "</div>").find('.container').popLockIt({
+        feedItems: $('body .container > ul'),
         columnSelector: '> ul'
       });
     },
