@@ -4,9 +4,11 @@
     it("should be chainable", function() {
       var item;
       item = $el.popLockIt({
+        columnSelector: '.column',
         feedItems: $el.children(),
-        columnSelector: '.',
-        margin: 10
+        onScroll: (function() {}),
+        preventFixed: false,
+        additionalFeedItemInit: (function() {})
       });
       return $el.should === item;
     });
@@ -15,19 +17,33 @@
         return $el.popLockIt();
       }).toThrow(new Error("You must pass settings"));
     });
-    it("should require being called on an element", function() {
+    it("should require being called on one element", function() {
       return expect(function() {
         return $.fn.popLockIt({
           feedItems: $el.children(),
-          columnSelector: '.',
-          margin: 10
+          columnSelector: '.column'
         });
-      }).toThrow(new Error("PopLockIt must be called on an element"));
+      }).toThrow(new Error("PopLockIt must be called on one element"));
+    });
+    it("should require being called on one element", function() {
+      $("<div class='test-container'><div class='feeditem'><div class='column'></div><div class='column'></div></div></div>").appendTo('body');
+      $("<div class='test-container'><div class='feeditem'><div class='column'></div><div class='column'></div></div></div>").appendTo('body');
+      window.$el = $('.test-container');
+      return expect(function() {
+        return $el.popLockIt({
+          feedItems: $el.children(),
+          columnSelector: '.column'
+        });
+      }).toThrow(new Error("PopLockIt must be called on one element"));
     });
     return it("sould raise error on invalid method", function() {
+      $el.popLockIt({
+        feedItems: $el.children(),
+        columnSelector: '.column'
+      });
       return expect(function() {
         return $el.popLockIt('invalid');
-      }).toThrow(new Error("Method invalid does not exist on jQuery.popLockIt"));
+      }).toThrow(new Error("Method 'invalid' does not exist on jQuery.popLockIt"));
     });
   });
 

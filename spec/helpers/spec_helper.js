@@ -1,7 +1,7 @@
 (function() {
 
   beforeEach(function() {
-    $("<div id='test-container'></div>").appendTo('body');
+    $("<div id='test-container'><div class='feeditem'><div class='column'></div><div class='column'></div></div></div>").appendTo('body');
     return window.$el = $('#test-container');
   });
 
