@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='http://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'>
     <!--[if lt IE 9]>
         <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -16,29 +17,22 @@
       <div class="feed_item">
         <div class="column left">
           <h1>jQuery.popLockIt</h1>
-          <p>Stop drop n lock it…in Javascript</p>
-          <a href="https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.min.js"><strong>Production Version</strong></a><br />
-          <a href="https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.js"><strong>Development Version</strong></a><br />
           <a href="https://github.com/zamiang/jquery.poplockit"><strong>View On GitHub</strong></a>
-        </div>
-        <div class="column right">
-          <img height=200 width=200 src="http://placekitten.com/200/200" />
         </div>
       </div>
       <div class="feed_item">
         <div class="column left">
-          <h1>Usage</h1>
-          <p>How to get started with jquery.poplockit</p>
+          <h2>Usage</h2>
         </div>
         <div class="column center">
-          <h3>Usage</h3>
-          <p>Download the production version or the development version.</p>
-          <p>Include required Javascripts</p>
-<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+          <span>Download the <a href="https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.min.js"><strong>production </strong></a> or 
+          <a href="https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.js"><strong>development</strong></a> version.</span><br />
+          <h3>Include required Javascripts</h3>
+          <div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"dist/poplockit.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 </pre></div>
 
-<p>Create html like this:</p>
+<h3>Create html like this:</h3>
 
 <div class="highlight"><pre>  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"feed"</span><span class="nt">&gt;</span>
     <span class="nt">&lt;article&gt;</span>
@@ -50,12 +44,11 @@
   <span class="nt">&lt;/div&gt;</span>
 </pre></div>
 
-<p>Apply the popLockIt plugin</p>
+<h3>Apply the popLockIt plugin</h3>
 
 <div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'#feed'</span><span class="p">).</span><span class="nx">popLockIt</span><span class="p">({</span>
   <span class="nx">feedItems</span>      <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#feed &gt; article'</span><span class="p">),</span>
-  <span class="nx">columnSelector</span> <span class="o">:</span> <span class="s1">'&gt; .column'</span><span class="p">,</span>
-  <span class="nx">margin</span>         <span class="o">:</span> <span class="mi">90</span>
+  <span class="nx">columnSelector</span> <span class="o">:</span> <span class="s1">'&gt; .column'</span>
 <span class="p">});</span>
 </pre></div>
         </div>
@@ -68,7 +61,6 @@
       <div class="feed_item">
         <div class="column left">
           <h2>Options</h2>
-          <p>Options you can pass in when initializing the plugin</p>
         </div>
         <div class="column center">
           <h3>feedItems { jQuery Object }</h3>
@@ -87,7 +79,6 @@
       <div class="feed_item">
         <div class="column left">
           <h2>Methods</h2>
-          <p>Options you can call on an element after calling popLockIt on that element</p>
         </div>
         <div class="column center">
           <h3>destroy()</h3>
@@ -107,10 +98,10 @@
       </div>
       <div class="feed_item">
         <div class="column left">
-          <h2>Contributing</h2>
-          <p>Contributions and pull requests are very welcome. Please follow these guidelines when submitting new code.</p>
-          </div>
+          <h2>contribute</h2>
+        </div>
         <div class="column center">
+          <p>Contributions and pull requests are very welcome. Please follow these guidelines when submitting new code.</p>
           <h3>Modifying the code</h3>
           <ol>
             <li>Fork and clone the repo.</li>
@@ -136,63 +127,13 @@
           <img height=150 width=200 src="http://placekitten.com/200/150" />
         </div>
       </div>
-
-      <div class="feed_item">
-        <div class="column left">
-          <h2>License</h2>
-          <p>Copyright (c) 2012 Brennan Moore</p>
-          </div>
-        <div class="column center">
-          <p>
-            Permission is hereby granted, free of charge, to any person obtaining
-            a copy of this software and associated documentation files (the
-            "Software"), to deal in the Software without restriction, including
-            without limitation the rights to use, copy, modify, merge, publish,
-            distribute, sublicense, and/or sell copies of the Software, and to
-            permit persons to whom the Software is furnished to do so, subject to
-            the following conditions:
-          </p>
-          <p>
-            The above copyright notice and this permission notice
-            shall be included in all copies or substantial portions of
-            the Software.
-          </p>
-          <p>
-            THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-            EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-            MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-            NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-            LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-            OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-            WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-          </p>
-        </div>
-        <div class="column right">
-          <img height=200 width=200 src="http://placekitten.com/200/200" />
-          <img height=100 width=200 src="http://placekitten.com/200/100" />
-          <img height=150 width=200 src="/http://placekitten.com/200/150" />
-        </div>
-      </div>
-      <div class="feed_item">
-        <div class="column left">
-          <h2>Footer</h2>
-          <p>This project is maintained by <a href="https://github.com/zamiang">zamiang</a></p>
-          <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-        </div>
-        <div class="column center">
-          <img height=200 width=500 src="http://placekitten.com/500/200" />
-        </div>
-        <div class="column right">
-          small contextual info!
-        </div>
-      </div>
     </div>
     <script src="javascripts/scale.fix.js"></script>
     <script src="javascripts/jquery.js"></script>
     <script src="javascripts/jquery.poplockit.min.js"></script>
     <script>
       $(function() {      
-        $('.wrapper').popLockIt({feedItems: $('.wrapper > .feed_item'), columnSelector: '> .column', margin: 90 });
+        $('.wrapper').popLockIt({feedItems: $('.wrapper > .feed_item'), columnSelector: '> .column' });
       });
     </script>
   </body>
