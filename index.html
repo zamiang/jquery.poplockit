@@ -14,10 +14,22 @@
   </head>
   <body>
     <header>
-      <a href="https://github.com/zamiang/jquery.poplockit">View On GitHub</a>
+    <h1>jQuery.popLockit</h1>
     </header>
+    <footer>
+      <a href="https://github.com/zamiang/jquery.poplockit">view on GitHub</a>
+    </footer>
     <div id="sidebar"></div>
     <div class="wrapper">
+      <div class="feed_item">
+        <div class="column left">
+          <h2>about</h2>
+        </div>
+        <div class="column center">
+          <h1>jQuery.popLockit</h1>
+          <p>A jQuery plugin for 'locking' short content in place as the user scrolls by longer content. For example, it will lock metadata and share buttons in place as the user scrolls by a long essay or series of images.</p>
+        </div>
+      </div>
       <div class="feed_item">
         <div class="column left">
           <h2>Options</h2>
@@ -26,9 +38,18 @@
           <h3>feedItems { jQuery Object }</h3>
           <p>jQuery object for you feed items.</p>
           <h3>columnSelector { selector String }</h3>
-          <p>Selector string to get the columns for your feed items relative to a feed item element. It is used in jQuery.popLockIt like so: ```javascript $feedItem.find(columnSelector);```</p>
-          <h3>margin { number }</h3>
-          <p>*todo* - investigate figuring this out from the html</p>
+          <p>Selector string to get the columns for your feed items relative to a feed item element. It is used in jQuery.popLockIt like so: $feedItem.find(columnSelector);</p>
+          <h3>preventFixed { boolean }</h3>
+          <p>Pass in preventFixed: true to have popLockIt use position absolute instead of fixed. This is useful for supporting browsers (Safari on iOS) that do not support position fixed.</p>
+          <h3>onScroll { function }</h3>
+          <p>This function will be called every time the popLockIt
+          scroll event fires. Useful for infinite scroll
+          functionality. We recommend that you pass in a throttled
+          function so that it does not affect scroll performance.</p>
+          <h3>additionalFeedItemInit { function($el, index) }</h3>
+          <p>Function that runs after each feed item is
+          initialized. Passes a jquery wrapped element and the index
+          of that element in the feed.</p>
         </div>
       </div>
       <div class="feed_item">
