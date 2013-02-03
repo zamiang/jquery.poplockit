@@ -25,6 +25,32 @@
         <div class="column center">
           <h1>jQuery.popLockit</h1>
           <p>A jQuery plugin for 'locking' short content in place as the user scrolls by longer content. For example, it will lock metadata and share buttons in place as the user scrolls by a long essay or series of images.</p>
+
+<p>This is used for the feed on <a href="http://artsy.net">Artsy</a>.</p>
+
+<h2>Usage</h2>
+<p class="nomargin">Include required Javascripts</p>
+<div class="highlight"><pre><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"dist/poplockit.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+</pre></div>
+
+<p class="nomargin">Create html like this</p>
+<div class="highlight"><pre>  <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"feed"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;article&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>Left<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>Center<span class="nt">&lt;/div&gt;</span>
+      <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"column"</span><span class="nt">&gt;</span>Right<span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/article&gt;</span>
+    ...
+  <span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+<p class="nomargin">Apply the popLockIt plugin</p>
+<div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s1">'#feed'</span><span class="p">).</span><span class="nx">popLockIt</span><span class="p">({</span>
+  <span class="nx">feedItems</span>      <span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s1">'#feed &gt; article'</span><span class="p">),</span>
+  <span class="nx">columnSelector</span> <span class="o">:</span> <span class="s1">'&gt; .column'</span>
+<span class="p">});</span>
+</pre></div>
         </div>
       </div>
       <div class="feed_item">
@@ -32,6 +58,7 @@
           <h2>Options</h2>
         </div>
         <div class="column center">
+          <h2>options</h2>
           <h3>feedItems { jQuery Object }</h3>
           <p>jQuery object for you feed items.</p>
           <h3>columnSelector { selector String }</h3>
@@ -54,6 +81,7 @@
           <h2>Methods</h2>
         </div>
         <div class="column center">
+          <h2>methods</h2>
           <h3>destroy()</h3>
           <p>returns feedItems and their Columns to their default positions and unbinds all events.</p>
           <h3>recompute()</h3>
@@ -69,6 +97,7 @@
           <h2>contribute</h2>
         </div>
         <div class="column center">
+          <h2>contribute</h2>
           <p>Contributions and pull requests are very welcome. Please follow these guidelines when submitting new code.</p>
           <h3>Modifying the code</h3>
           <ol>

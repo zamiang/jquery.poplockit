@@ -20,10 +20,18 @@ p, ul, ol, table, pre, dl {
   margin:0 0 20px;
 }
 
+pre {
+  margin-bottom: 30px;
+}
+
 p {
   margin:0 0 50px;
   line-height: 170%;
   font-size: 14px;
+}
+
+p.nomargin {
+  margin:0 0 20px;
 }
 
 ol {
@@ -112,7 +120,6 @@ img {
   text-align: left;
 }
 
-
 strong {
   color:#222;
   font-weight:700;
@@ -167,7 +174,7 @@ strong {
 }
 
 .column.center {
-  width: 404px;
+  width: 454px;
   margin-right: 50px
 }
 
