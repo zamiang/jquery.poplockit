@@ -1,5 +1,5 @@
-/*! jQuery.popLockIt - v0.1.0 - 2013-02-02
-* https://github.com/zamiang/jquery.popLockIt
+/*! jQuery.popLockIt - v0.1.1 - 2013-02-03
+* http://zamiang.github.com/jquery.poplockit
 * Copyright (c) 2013 Brennan Moore; Licensed MIT */
 
 (function() {

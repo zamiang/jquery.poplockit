@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        pkg: '<json:jquery.poplockit.json>',
+        pkg: '<json:poplockit.jquery.json>',
         meta: {
             banner: '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - ' +
                 '<%= grunt.template.today("yyyy-mm-dd") %>\n' +
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
         jasmine : {
             src : ['lib/jquery.js', 'src/**/*.js'],
             specs : 'spec/**/*_spec.js',
-            helpers : ['dist/jquery.poplockit.js', 'spec/helpers/*.js']
+            helpers : ['dist/<%= pkg.name %>.js', 'spec/helpers/*.js']
         },
         coffee: {
             dist: {

@@ -1,6 +1,6 @@
 {
     "name": "jquery.poplockit",
-    "version": "0.0.1",
+    "version": "0.1.1",
     "main": "dist/jquery.poplockit",
     "engines": {
         "node": ">= 0.6.0"
