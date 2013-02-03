@@ -86,10 +86,18 @@
           <p>returns feedItems and their Columns to their default positions and unbinds all events.</p>
           <h3>recompute()</h3>
           <p>Recomputes height / top / bottom etc of each feed item and its columns. Run if the size of any of your feed items has changed</p>
+          <h3>recomputeItem(index)</h3>
+          <p>Recomputes height / top / bottom etc of one feed item and its columns. Run if the size of only 1 feed item has changed</p>
+          <h3>recomputeItemColumn(index, column)</h3>
+          <p>Recomputes height / top / bottom etc of one feed item's column. Run if one column of one of your feed items has changed.</p>
           <h3>onScroll()</h3>
           <p>Manually run the onScroll event. Recommend running this if you have hidden the feed and are now re-showing it.</p>
           <h3>addFeedItems( { jQuery Object } )</h3>
           <p>Add items to the feed. Takes a jQuery object containing the new feed items.</p>
+          <h3>start()</h3>
+          <p>Restarts popLockit after calling Stop</p>
+          <h3>stop()</h3>
+          <p>Stop popLockit from running. Useful if you want to temporarily disable popLockit functionality</p>
         </div>
       </div>
       <div class="feed_item">
