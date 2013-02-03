@@ -38,7 +38,7 @@
           <p>Selector string to get the columns for your feed items relative to a feed item element. It is used in jQuery.popLockIt like so: $feedItem.find(columnSelector);</p>
           <h3>preventFixed { boolean }</h3>
           <p>Pass in preventFixed: true to have popLockIt use position absolute instead of fixed. This is useful for supporting browsers (Safari on iOS) that do not support position fixed.</p>
-          <h3>onScroll { function }</h3>
+          <h3>onScroll { function(scrollTop) }</h3>
           <p>This function will be called every time the popLockIt
           scroll event fires. Useful for infinite scroll
           functionality. We recommend that you pass in a throttled
