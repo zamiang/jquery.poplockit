@@ -1,9 +1,9 @@
 {
-    "name": "jquery.poplockit",
+    "name": "poplockit",
     "title": "jQuery.popLockIt",
     "description": "A jQuery plugin for 'locking' short content in place as the user scrolls by longer content. For example, it will lock metadata and share buttons in place as the user scrolls by a long essay or series of images.",
+    "keywords": ["feed"],
     "version": "0.1.0",
-    "homepage": "https://github.com/zamiang/jquery.popLockIt",
     "author": {
         "name": "Brennan Moore",
         "email": "brennanmoore@gmail.com",
@@ -16,6 +16,10 @@
     "bugs": {
         "url": "https://github.com/zamiang/jquery.poplockit/issues"
     },
+    "homepage": "http://zamiang.github.com/jquery.poplockit",
+    "download": "https://github.com/zamiang/jquery.popLockIt",
+    "bugs": "https://github.com/zamiang/jquery.popLockIt/issues",
+    "docs": "http://zamiang.github.com/jquery.poplockit",
     "licenses": [
         {
             "type": "MIT",
@@ -23,7 +27,6 @@
         }
     ],
     "dependencies": {
-        "jquery": "1.7"
-    },
-    "keywords": []
+        "jquery": ">=1.7"
+    }
 }
