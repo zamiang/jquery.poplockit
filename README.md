@@ -7,6 +7,8 @@ scrolls by longer content. For example, it will lock metadata and
 share buttons in place as the user scrolls by a long essay or series
 of images.
 
+This is used for the feed on [Artsy](http://artsy.net)
+
 For documentation, usage and examples please see http://zamiang.github.com/jquery.poplockit/
 
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
