@@ -10,7 +10,7 @@ of images.
 ## Demos
 
 * [Homepage Feed on Artsy](http://artsy.net)
-* [Scrolling Kittens](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) from [Placekitten](http://placekitten.com/)
+* [Scrolling Adorable Kittens](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) from [Placekitten](http://placekitten.com/)
 
 For documentation, usage and examples please see [http://zamiang.github.com/jquery.poplockit](http://zamiang.github.com/jquery.poplockit/).
 
