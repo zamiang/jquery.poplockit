@@ -13,6 +13,11 @@ For documentation, usage and examples please see http://zamiang.github.com/jquer
 
 See [this example](http://htmlpreview.github.com/?https://github.com/zamiang/jquery.poplockit/blob/master/example/index.html) using [Placekitten](http://placekitten.com/)
 
+![https://raw.github.com/zamiang/jquery.poplockit/master/img/example1.png](https://raw.github.com/zamiang/jquery.poplockit/master/img/example1.png)
+![https://raw.github.com/zamiang/jquery.poplockit/master/img/example2.png](https://raw.github.com/zamiang/jquery.poplockit/master/img/example2.png)
+
+
+
 ## Usage
 
 Download the [production version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.min.js) or the [development version](https://raw.github.com/zamiang/jquery.poplockit/master/dist/jquery.poplockit.js).
