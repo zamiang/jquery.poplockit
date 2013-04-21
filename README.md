@@ -14,9 +14,9 @@ of images.
 
 For documentation, usage and examples please see [http://zamiang.github.com/jquery.poplockit](http://zamiang.github.com/jquery.poplockit/).
 
+Note how the kitten stays as you scroll through the body of the post
 ![https://raw.github.com/zamiang/jquery.poplockit/master/img/example1.png](https://raw.github.com/zamiang/jquery.poplockit/master/img/example1.png)
 ![https://raw.github.com/zamiang/jquery.poplockit/master/img/example2.png](https://raw.github.com/zamiang/jquery.poplockit/master/img/example2.png)
-
 
 
 ## Usage
