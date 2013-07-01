@@ -12,7 +12,7 @@ of images.
 * [Posts Feed on Artsy](http://artsy.net/posts)
 * [Scrolling Adorable Kittens](http://zamiang.github.io/jquery.poplockit/example/index.html) from [Placekitten](http://placekitten.com/)
 
-For documentation, usage and examples please see [http://zamiang.github.com/jquery.poplockit](http://zamiang.github.com/jquery.poplockit/).
+For documentation, usage and examples please see [http://zamiang.github.io/jquery.poplockit](http://zamiang.github.io/jquery.poplockit/).
 
 Note how the kitten stays as you scroll through the body of the post
 ![https://raw.github.com/zamiang/jquery.poplockit/master/poplockit.gif](https://raw.github.com/zamiang/jquery.poplockit/master/poplockit.gif)
