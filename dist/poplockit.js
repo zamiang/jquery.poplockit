@@ -1,10 +1,9 @@
-/*! jQuery.popLockIt - v0.1.1 - 2013-02-03
+/*! jQuery.popLockIt - v0.1.1 - 2013-08-19
 * http://zamiang.github.com/jquery.poplockit
 * Copyright (c) 2013 Brennan Moore; Licensed MIT */
 
 (function() {
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = {}.hasOwnProperty,
+  var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   (function($, window, document) {
@@ -44,31 +43,39 @@
 
       Column.prototype.marginLeft = 0;
 
+      Column.prototype.parentHeight = 0;
+
+      Column.prototype.height = 0;
+
+      Column.prototype.top = 0;
+
+      Column.prototype.bottom = 0;
+
+      Column.prototype.left = 0;
+
       function Column($el, settings) {
         this.$el = $el;
         this.settings = settings;
-        this.setPosition = __bind(this.setPosition, this);
-
-        this.setDimensions = __bind(this.setDimensions, this);
-
-        this.setDimensions(settings.height, settings.marginTop, settings.marginBottom, settings.marginLeft);
         this;
 
       }
 
-      Column.prototype.setDimensions = function(parentHeight, marginTop, marginBottom, marginLeft) {
-        if (parentHeight) {
-          this.parentHeight = parentHeight;
+      Column.prototype.setMargins = function(settings) {
+        if (settings.parentHeight) {
+          this.parentHeight = settings.parentHeight;
         }
-        if (marginTop) {
-          this.marginTop = marginTop;
+        if (settings.marginTop) {
+          this.marginTop = settings.marginTop;
         }
-        if (marginBottom) {
-          this.marginBottom = marginBottom;
+        if (settings.marginBottom) {
+          this.marginBottom = settings.marginBottom;
         }
-        if (marginLeft) {
-          this.marginLeft = marginLeft;
+        if (settings.marginLeft) {
+          return this.marginLeft = settings.marginLeft;
         }
+      };
+
+      Column.prototype.setDimensions = function() {
         this.height = Math.floor(Number(this.$el.css('height').replace('px', "")));
         this.top = Math.floor(this.$el.offset().top - this.marginTop);
         this.left = Math.floor(this.$el.offset().left);
@@ -88,10 +95,15 @@
         }
         newState = {
           position: pos,
-          top: direction === 'north' ? this.marginTop : 'auto',
-          bottom: direction === 'south' ? this.marginBottom : 'auto',
-          left: this.getLeftForPosition(pos)
+          left: Math.round(this.getLeftForPosition(pos))
         };
+        if (pos === 'absolute') {
+          newState.top = direction === 'north' ? this.marginTop : 'auto';
+          newState.bottom = direction === 'south' ? this.marginBottom : 'auto';
+        } else {
+          newState.top = direction === 'north' ? this.marginTop : 'auto';
+          newState.bottom = direction === 'south' ? 0 : 'auto';
+        }
         if (!this.oldState) {
           this.$el.css(newState);
           return this.oldState = newState;
@@ -118,23 +130,26 @@
         } else if (pos === 'static') {
           return 0;
         } else {
-          return this.left - (this.marginLeft || 0);
+          return this.left - this.marginLeft;
         }
       };
 
-      Column.prototype.onScroll = function(scrollTop, viewportHeight, preventFixed) {
+      Column.prototype.onScroll = function(scrollTop, viewportHeight, preventFixed, scrollDirection) {
         if (preventFixed == null) {
           preventFixed = false;
         }
-        if (!preventFixed && scrollTop >= this.top && scrollTop < this.bottom) {
-          return this.setPosition('fixed');
-        }
-        if (scrollTop < this.top) {
-          return this.setPosition('absolute', 'north');
+        if (!preventFixed) {
+          if (this.height < viewportHeight && scrollTop >= this.top && scrollTop < this.bottom) {
+            return this.setPosition('fixed', 'north');
+          }
+          if (this.height > viewportHeight && this.height < this.parentHeight && (scrollTop + viewportHeight) >= (this.top + this.height) && (scrollTop + viewportHeight) < (this.parentHeight + this.top)) {
+            return this.setPosition('fixed', 'south');
+          }
         }
         if (scrollTop >= this.bottom) {
           return this.setPosition('absolute', 'south');
         }
+        return this.setPosition('absolute', 'north');
       };
 
       Column.prototype.destroy = function() {
@@ -152,29 +167,19 @@
 
       FeedItem.prototype.active = false;
 
-      FeedItem.prototype.initialize = function() {
-        this.setDimensions();
-        return this.createColumns();
-      };
+      FeedItem.prototype.columns = [];
 
       function FeedItem($el, settings, index, parent) {
         this.$el = $el;
         this.settings = settings;
         this.index = index;
         this.parent = parent;
-        this.recomputeColumn = __bind(this.recomputeColumn, this);
-
-        this.recompute = __bind(this.recompute, this);
-
-        this.onScroll = __bind(this.onScroll, this);
-
-        this.setDimensions = __bind(this.setDimensions, this);
-
-        this.initialize = __bind(this.initialize, this);
-
         FeedItem.__super__.constructor.apply(this, arguments);
         this.$columns = this.$el.find(this.settings.columnSelector);
-        this.initialize();
+        if (this.hasColumns()) {
+          this.setDimensions();
+          this.createColumns();
+        }
         if (this.settings.additionalFeedItemInit) {
           this.settings.additionalFeedItemInit(this.$el, this.index);
         }
@@ -183,31 +188,26 @@
       }
 
       FeedItem.prototype.createColumns = function() {
-        var height, left, marginBottom, marginTop, _ref;
-        if (this.$columns.length < 2) {
-          return;
+        var column, _i, _j, _len, _len1, _ref, _ref1, _results;
+        this.columns = this.$columns.map(function() {
+          return new Column($(this));
+        });
+        _ref = this.columns;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          column = _ref[_i];
+          this.setColumnMargins(column);
         }
-        height = this.height;
-        left = this.left;
-        marginTop = this.marginTop;
-        marginBottom = this.marginBottom;
-        if (((_ref = this.$columns) != null ? _ref.length : void 0) > 0) {
-          return this.columns = this.$columns.map(function() {
-            return new Column($(this), {
-              height: height,
-              marginTop: marginTop,
-              marginBottom: marginBottom,
-              marginLeft: left
-            });
-          });
+        _ref1 = this.columns;
+        _results = [];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          column = _ref1[_j];
+          _results.push(column.setDimensions());
         }
+        return _results;
       };
 
       FeedItem.prototype.setDimensions = function() {
         var height;
-        if (this.$columns.length < 2) {
-          return;
-        }
         this.marginTop = Number(this.$el.css('padding-top').replace('px', ''));
         this.marginBottom = Number(this.$el.css('padding-bottom').replace('px', ''));
         this.resetColumnPositioning();
@@ -224,48 +224,31 @@
         return this.bottom = this.top + this.height;
       };
 
-      FeedItem.prototype.resetColumnPositioning = function() {
-        var column, _i, _len, _ref, _ref1, _results;
-        if (!(((_ref = this.columns) != null ? _ref.length : void 0) > 0)) {
-          return;
-        }
-        _ref1 = this.columns;
-        _results = [];
-        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          column = _ref1[_i];
-          _results.push(column.setPosition('static'));
-        }
-        return _results;
-      };
-
       FeedItem.prototype.onScroll = function(scrollTop, viewportHeight, forceOnScroll) {
-        var column, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _ref3, _results, _results1;
-        if (!(((_ref = this.columns) != null ? _ref.length : void 0) > 0)) {
-          return;
-        }
+        var column, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results, _results1;
         if (viewportHeight >= this.height) {
           return this.active = false;
         } else if (scrollTop >= this.top && scrollTop < this.bottom) {
           this.active = true;
-          _ref1 = this.columns;
+          _ref = this.columns;
           _results = [];
-          for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-            column = _ref1[_i];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            column = _ref[_i];
             _results.push(column.onScroll(scrollTop, viewportHeight, this.parent.settings.preventFixed));
           }
           return _results;
         } else if (this.active) {
-          _ref2 = this.columns;
-          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-            column = _ref2[_j];
+          _ref1 = this.columns;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            column = _ref1[_j];
             column.onScroll(scrollTop, viewportHeight, true);
           }
           return this.active = false;
         } else if (forceOnScroll) {
-          _ref3 = this.columns;
+          _ref2 = this.columns;
           _results1 = [];
-          for (_k = 0, _len2 = _ref3.length; _k < _len2; _k++) {
-            column = _ref3[_k];
+          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+            column = _ref2[_k];
             _results1.push(column.onScroll(scrollTop, viewportHeight, true));
           }
           return _results1;
@@ -273,29 +256,47 @@
       };
 
       FeedItem.prototype.recompute = function() {
-        var column, _i, _len, _ref, _ref1, _results;
-        if (!(((_ref = this.columns) != null ? _ref.length : void 0) > 0)) {
-          return;
-        }
+        var column, _i, _j, _len, _len1, _ref, _ref1, _results;
         this.setDimensions();
+        _ref = this.columns;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          column = _ref[_i];
+          this.setColumnMargins(column);
+        }
         _ref1 = this.columns;
         _results = [];
-        for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
-          column = _ref1[_i];
-          _results.push(column.setDimensions(this.height, this.marginTop, this.marginBottom, this.left));
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          column = _ref1[_j];
+          _results.push(column.setDimensions());
         }
         return _results;
       };
 
+      FeedItem.prototype.setColumnMargins = function(column) {
+        return column.setMargins({
+          parentHeight: this.height,
+          marginTop: this.marginTop,
+          marginBottom: this.marginBottom,
+          marginLeft: this.left
+        });
+      };
+
       FeedItem.prototype.recomputeColumn = function(index) {
-        var _ref;
-        if (!(((_ref = this.columns) != null ? _ref.length : void 0) > 0)) {
-          return;
-        }
         if (!!this.columns[index]) {
           return;
         }
-        return this.columns[index].setDimensions(this.height, this.settings.marginTop, this.settings.marginBottom, this.left);
+        return this.setColumnMargins(this.columns[index]);
+      };
+
+      FeedItem.prototype.resetColumnPositioning = function() {
+        var column, _i, _len, _ref, _results;
+        _ref = this.columns;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          column = _ref[_i];
+          _results.push(column.setPosition('static'));
+        }
+        return _results;
       };
 
       FeedItem.prototype.destroy = function() {
@@ -307,6 +308,11 @@
           _results.push(column.destroy());
         }
         return _results;
+      };
+
+      FeedItem.prototype.hasColumns = function() {
+        var _ref;
+        return ((_ref = this.$columns) != null ? _ref.length : void 0) > 1;
       };
 
       return FeedItem;
@@ -334,18 +340,6 @@
         var _ref;
         this.el = el;
         this.settings = settings;
-        this.addFeedItems = __bind(this.addFeedItems, this);
-
-        this.start = __bind(this.start, this);
-
-        this.stop = __bind(this.stop, this);
-
-        this.destroy = __bind(this.destroy, this);
-
-        this.recomputeItemColumn = __bind(this.recomputeItemColumn, this);
-
-        this.recomputeItem = __bind(this.recomputeItem, this);
-
         this.$el = $(this.el);
         if (this.settings == null) {
           throw "You must pass settings";

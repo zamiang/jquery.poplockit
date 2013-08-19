@@ -28,7 +28,7 @@ describe "$.fn.popLockIt", ->
       columnSelector : '.column'
     )).toThrow new Error("PopLockIt must be called on one element")
 
-  it "sould raise error on invalid method", ->
+  it "should raise error on invalid method", ->
     $el.popLockIt
       feedItems      : $el.children()
       columnSelector : '.column'

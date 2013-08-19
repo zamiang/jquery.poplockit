@@ -3,6 +3,11 @@ Next Release
 
 * Your contribution here.
 
+0.1.2 (TBD)
+===========
+
+* Fix: Correctly handle if left most column is longest column
+
 0.1.1 (TBD)
 ===========
 
