@@ -41,31 +41,42 @@
     marginTop: 0
     marginBottom: 0
     marginLeft: 0
+    parentHeight: 0
+
+    height: 0
+    top: 0
+    bottom: 0
+    left: 0
 
     constructor: (@$el, @settings) ->
-      @setDimensions settings.height, settings.marginTop, settings.marginBottom, settings.marginLeft
       @
 
-    setDimensions: (parentHeight, marginTop, marginBottom, marginLeft) =>
-      @parentHeight = parentHeight if parentHeight
-      @marginTop = marginTop if marginTop
-      @marginBottom = marginBottom if marginBottom
-      @marginLeft = marginLeft if marginLeft
+    setMargins: (settings) ->
+      @parentHeight = settings.parentHeight if settings.parentHeight
+      @marginTop = settings.marginTop if settings.marginTop
+      @marginBottom = settings.marginBottom if settings.marginBottom
+      @marginLeft = settings.marginLeft if settings.marginLeft
 
+    setDimensions: ->
       @height = Math.floor Number(@$el.css('height').replace('px',""))
       @top = Math.floor(@$el.offset().top - @marginTop)
       @left = Math.floor(@$el.offset().left)
       @bottom = Math.floor(@top + @parentHeight - @height)
       @top = 1 if @top < 1
 
-    setPosition: (pos = 'absolute', direction = 'north') =>
-
+    setPosition: (pos = 'absolute', direction = 'north') ->
       newState =
         position : pos
-        top      : if direction == 'north' then @marginTop else 'auto'
-        bottom   : if direction == 'south' then @marginBottom else 'auto'
-        left     : @getLeftForPosition(pos)
+        left     : Math.round(@getLeftForPosition(pos))
 
+      if pos == 'absolute'
+        newState.top = if direction == 'north' then @marginTop else 'auto'
+        newState.bottom = if direction == 'south' then @marginBottom else 'auto'
+      else
+        newState.top = if direction == 'north' then @marginTop else 'auto'
+        newState.bottom = if direction == 'south' then 0 else 'auto'
+
+      # first time around we have nothing to diff and want to apply the entire changeset
       unless @oldState
         @$el.css newState
         return @oldState = newState
@@ -87,16 +98,18 @@
       else if pos == 'static'
         0
       else
-        @left - (@marginLeft || 0)
+        @left - @marginLeft
 
-    onScroll: (scrollTop, viewportHeight, preventFixed=false) ->
-      return @setPosition('fixed') if !preventFixed and scrollTop >= @top and scrollTop < @bottom
-      return @setPosition('absolute', 'north') if scrollTop < @top
+    onScroll: (scrollTop, viewportHeight, preventFixed=false, scrollDirection) ->
+      if !preventFixed
+        return @setPosition('fixed', 'north') if @height < viewportHeight and scrollTop >= @top and scrollTop < @bottom
+        return @setPosition('fixed', 'south') if @height > viewportHeight and @height < @parentHeight and (scrollTop + viewportHeight) >= (@top + @height) and (scrollTop + viewportHeight) < (@parentHeight + @top)
+
       return @setPosition('absolute', 'south') if scrollTop >= @bottom
+      @setPosition('absolute', 'north')
 
     # return to default state on destroy
     destroy: -> @setPosition()
-
 
 
 
@@ -106,37 +119,24 @@
 
     requires: ['columnSelector']
     active: false
-
-    initialize: =>
-      @setDimensions()
-      @createColumns()
+    columns: []
 
     constructor: (@$el, @settings, @index, @parent) ->
       super
       @$columns = @$el.find @settings.columnSelector
-      @initialize()
-    
+      if @hasColumns()
+        @setDimensions()
+        @createColumns()
+
       @settings.additionalFeedItemInit(@$el, @index) if @settings.additionalFeedItemInit
       @
 
     createColumns: ->
-      return if @$columns.length < 2
+      @columns = @$columns.map -> new Column($(this))
+      @setColumnMargins(column) for column in @columns
+      column.setDimensions() for column in @columns
 
-      height = @height
-      left = @left
-      marginTop = @marginTop
-      marginBottom = @marginBottom
-
-      if @$columns?.length > 0
-        @columns = @$columns.map -> new Column $(this),
-          height       : height
-          marginTop    : marginTop
-          marginBottom : marginBottom
-          marginLeft   : left
-
-    setDimensions: =>
-      return if @$columns.length < 2
-
+    setDimensions: ->
       # accomodate for when feed items have different padding
       @marginTop = Number(@$el.css('padding-top').replace('px', ''))
       @marginBottom = Number(@$el.css('padding-bottom').replace('px', ''))
@@ -154,13 +154,7 @@
       @top = @$el.offset().top
       @bottom = @top + @height
 
-    resetColumnPositioning: ->
-      return unless @columns?.length > 0
-      column.setPosition('static') for column in @columns
-
-    onScroll: (scrollTop, viewportHeight, forceOnScroll) =>
-      return unless @columns?.length > 0
-
+    onScroll: (scrollTop, viewportHeight, forceOnScroll) ->
       # only trigger onscroll for columns if the feeditem is visible in the viewport
       if viewportHeight >= @height
         @active = false
@@ -173,21 +167,27 @@
       else if forceOnScroll
         column.onScroll(scrollTop, viewportHeight, true) for column in @columns
 
-    recompute: =>
-      return unless @columns?.length > 0
+    recompute: ->
       @setDimensions()
-      for column in @columns
-        column.setDimensions @height, @marginTop, @marginBottom, @left
+      @setColumnMargins(column) for column in @columns
+      column.setDimensions() for column in @columns
 
-    recomputeColumn: (index) =>
-      return unless @columns?.length > 0
+    setColumnMargins: (column) ->
+      column.setMargins
+        parentHeight : @height
+        marginTop    : @marginTop
+        marginBottom : @marginBottom
+        marginLeft   : @left
+
+    recomputeColumn: (index) ->
       return unless !@columns[index]
-      @columns[index].setDimensions @height, @settings.marginTop, @settings.marginBottom, @left
+      @setColumnMargins @columns[index]
 
-    destroy: ->
-      column.destroy() for column in @columns
+    resetColumnPositioning: -> column.setPosition('static') for column in @columns
 
+    destroy: -> column.destroy() for column in @columns
 
+    hasColumns: -> @$columns?.length > 1
 
 
 
@@ -250,15 +250,15 @@
       for item in @feedItems
         item.onScroll scrollTop, @viewportHeight, false
 
-    recomputeItem: (index) =>
+    recomputeItem: (index) ->
       return unless @feedItems[index]
       @feedItems[index].recompute()
 
-    recomputeItemColumn: (index, columnIndex) =>
+    recomputeItemColumn: (index, columnIndex) ->
       return unless @feedItems[index]
       @feedItems[index].recomputeColumn columnIndex
 
-    destroy: =>
+    destroy: ->
       @settings.rendered = false
       @settings.active = false
       $.data @$el, "plugin_#{pluginName}", false
@@ -268,17 +268,17 @@
 
       @feedItems = []
 
-    stop: =>
+    stop: ->
       @settings.active = false
       window.cancelAnimationFrame @requestedAnimationFrame
 
-    start: =>
+    start: ->
       @settings.active = true
       window.cancelAnimationFrame @requestedAnimationFrame
       @requestedAnimationFrame = window.requestAnimationFrame (=> @onScroll())
 
 
-    addFeedItems: ($feedItems) =>
+    addFeedItems: ($feedItems) ->
       throw "You must pass $feedItems" unless $feedItems? and $feedItems.length
       # jQuery map - returns a $(array) instead of a real array
       $feedItems.map (index, el) =>
