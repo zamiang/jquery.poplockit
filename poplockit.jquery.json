@@ -3,7 +3,7 @@
     "title": "jQuery.popLockIt",
     "description": "A jQuery plugin for 'locking' short content in place as the user scrolls by longer content. For example, it will lock metadata and share buttons in place as the user scrolls by a long essay or series of images.",
     "keywords": ["feed", "ui"],
-    "version": "0.1.1",
+    "version": "0.1.2",
     "author": {
         "name": "Brennan Moore",
         "email": "brennanmoore@gmail.com",

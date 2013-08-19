@@ -36,7 +36,7 @@
         });
       }).toThrow(new Error("PopLockIt must be called on one element"));
     });
-    return it("sould raise error on invalid method", function() {
+    return it("should raise error on invalid method", function() {
       $el.popLockIt({
         feedItems: $el.children(),
         columnSelector: '.column'
