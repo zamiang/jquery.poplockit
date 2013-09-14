@@ -135,8 +135,16 @@
           preventFixed = false;
         }
         if (!preventFixed) {
-          if (this.height < viewportHeight && scrollTop >= this.top && scrollTop < this.bottom) {
-            return this.setPosition('fixed', 'north');
+          if (this.height === viewportHeight) {
+            if (scrollTop < this.top + this.parentHeight - this.height) {
+              return this.setPosition('fixed', 'north');
+            }
+            return this.setPosition('absolute', 'south');
+          } else if (this.height < viewportHeight) {
+            if (scrollTop >= this.top && scrollTop < this.top + this.parentHeight - this.height) {
+              return this.setPosition('fixed', 'north');
+            }
+            return this.setPosition('absolute', 'south');
           }
           if (this.height > viewportHeight && this.height < this.parentHeight && (scrollTop + viewportHeight) >= (this.top + this.height) && (scrollTop + viewportHeight) < (this.parentHeight + this.top)) {
             return this.setPosition('fixed', 'south');

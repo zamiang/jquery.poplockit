@@ -102,7 +102,13 @@
 
     onScroll: (scrollTop, viewportHeight, preventFixed=false, scrollDirection) ->
       if !preventFixed
-        return @setPosition('fixed', 'north') if @height < viewportHeight and scrollTop >= @top and scrollTop < @bottom
+        if @height == viewportHeight
+          if (scrollTop < @top + @parentHeight - @height)
+            return @setPosition('fixed', 'north')
+          return @setPosition('absolute', 'south')
+        else if @height < viewportHeight
+          return @setPosition('fixed', 'north') if scrollTop >= @top and scrollTop < @top + @parentHeight - @height
+          return @setPosition('absolute', 'south')
         return @setPosition('fixed', 'south') if @height > viewportHeight and @height < @parentHeight and (scrollTop + viewportHeight) >= (@top + @height) and (scrollTop + viewportHeight) < (@parentHeight + @top)
 
       return @setPosition('absolute', 'south') if scrollTop >= @bottom
@@ -329,7 +335,7 @@
       $.data(@, "plugin_#{pluginName}", new Feed(@, options))
     else if $.data(@, "plugin_#{pluginName}")[options]?
       $.data(@, "plugin_#{pluginName}")[options] Array::slice.call(arguments, 1)[0], Array::slice.call(arguments, 1)[1]
-    else    
+    else
       throw "Method '#{options}' does not exist on jQuery.popLockIt"
 
 )(jQuery, window, document)
