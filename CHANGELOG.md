@@ -3,6 +3,11 @@ Next Release
 
 * Your contribution here.
 
+0.1.3 (TBD)
+===========
+
+* Fix: Correctly handle if column is browser height
+
 0.1.2 (TBD)
 ===========
 
