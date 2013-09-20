@@ -150,7 +150,7 @@
             return this.setPosition('fixed', 'south');
           }
         }
-        if (scrollTop >= this.bottom) {
+        if ((scrollTop + viewportHeight) >= this.bottom && this.height >= viewportHeight) {
           return this.setPosition('absolute', 'south');
         }
         return this.setPosition('absolute', 'north');
