@@ -111,7 +111,7 @@
           return @setPosition('absolute', 'south')
         return @setPosition('fixed', 'south') if @height > viewportHeight and @height < @parentHeight and (scrollTop + viewportHeight) >= (@top + @height) and (scrollTop + viewportHeight) < (@parentHeight + @top)
 
-      return @setPosition('absolute', 'south') if scrollTop >= @bottom
+      return @setPosition('absolute', 'south') if (scrollTop + viewportHeight) >= @bottom && @height >= viewportHeight
       @setPosition('absolute', 'north')
 
     # return to default state on destroy
