@@ -3,6 +3,11 @@ Next Release
 
 * Your contribution here.
 
+0.1.4 (TBD)
+===========
+
+* Fix: Correctly handle if right most column is very short
+
 0.1.3 (TBD)
 ===========
 

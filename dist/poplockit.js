@@ -1,4 +1,4 @@
-/*! jQuery.popLockIt - v0.1.2 - 2013-09-14
+/*! jQuery.popLockIt - v0.1.2 - 2013-09-20
 * http://zamiang.github.com/jquery.poplockit
 * Copyright (c) 2013 Brennan Moore; Licensed MIT */
 
@@ -154,7 +154,7 @@
             return this.setPosition('fixed', 'south');
           }
         }
-        if (scrollTop >= this.bottom) {
+        if ((scrollTop + viewportHeight) >= this.bottom && this.height >= viewportHeight) {
           return this.setPosition('absolute', 'south');
         }
         return this.setPosition('absolute', 'north');
